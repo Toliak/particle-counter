@@ -1,0 +1,6 @@
+.idea
+__pycache__
+local.py
+Pipfile.lock
+data
+.ipynb_checkpoints

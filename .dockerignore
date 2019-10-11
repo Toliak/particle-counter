@@ -1,0 +1,6 @@
+data
+Pipfile.lock
+*.md
+*.yml
+.gitignore
+.idea
