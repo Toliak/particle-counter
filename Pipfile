@@ -11,6 +11,7 @@ sklearn = "*"
 scikit-image = "*"
 numpy = "*"
 matplotlib = "*"
+imageio = "*"
 
 [requires]
 python_version = "3.7"
