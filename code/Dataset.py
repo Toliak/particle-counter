@@ -54,3 +54,28 @@ def gray_background():
 
 def easy_spheres():
     return load_by_path('011_p.png')
+
+
+def get_full_dataset() -> list:
+    return [
+        dict(image=hard(),
+             title='hard'),
+        dict(image=large_1x(),
+             title='large_1x'),
+        dict(image=large_2x(),
+             title='large_2x'),
+        dict(image=large_4x(),
+             title='large_4x'),
+        dict(image=flat(),
+             title='flat'),
+        dict(image=easy(),
+             title='easy'),
+        dict(image=easy_large(),
+             title='easy_large'),
+        dict(image=light(),
+             title='light'),
+        dict(image=gray_background(),
+             title='gray_background'),
+        dict(image=easy_spheres(),
+             title='easy_spheres'),
+    ]

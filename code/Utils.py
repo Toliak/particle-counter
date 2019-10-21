@@ -3,7 +3,7 @@ from skimage.color import rgb2gray
 
 
 def visualize(what, label='', cmap='viridis'):
-    plot.figure(figsize=(8, 8))
+    plot.figure(figsize=(8,8))
     plot.imshow(what, cmap=cmap)
     plot.title(label)
     plot.show()
