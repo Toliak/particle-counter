@@ -56,6 +56,30 @@ def easy_spheres():
     return load_by_path('011_p.png')
 
 
+def medium():
+    return load_by_path('012_1_p.png')
+
+
+def low_amount():
+    return load_by_path('012_2_p.png')
+
+
+def easy_medium():
+    return load_by_path('013_p.png')
+
+
+def low_amount_noise():
+    return load_by_path('014_p.png')
+
+
+def light_many():
+    return load_by_path('015_p.png')
+
+
+def easy_medium_many():
+    return load_by_path('016_p.png')
+
+
 def get_full_dataset() -> list:
     return [
         dict(image=hard(),
@@ -78,4 +102,16 @@ def get_full_dataset() -> list:
              title='gray_background'),
         dict(image=easy_spheres(),
              title='easy_spheres'),
+        dict(image=medium(),
+             title='medium'),
+        dict(image=low_amount(),
+             title='low_amount'),
+        dict(image=easy_medium(),
+             title='easy_medium'),
+        dict(image=low_amount_noise(),
+             title='low_amount_noise'),
+        dict(image=light_many(),
+             title='light_many'),
+        dict(image=easy_medium_many(),
+             title='easy_medium_many'),
     ]
