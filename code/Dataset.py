@@ -48,10 +48,6 @@ def light():
     return load_by_path('009_p.png')
 
 
-def gray_background():
-    return load_by_path('010_p.png')
-
-
 def easy_spheres():
     return load_by_path('011_p.png')
 
@@ -80,6 +76,10 @@ def easy_medium_many():
     return load_by_path('016_p.png')
 
 
+def small():
+    return load_by_path('008_p.png')
+
+
 def get_full_dataset() -> list:
     return [
         dict(image=hard(),
@@ -98,8 +98,6 @@ def get_full_dataset() -> list:
              title='easy_large'),
         dict(image=light(),
              title='light'),
-        dict(image=gray_background(),
-             title='gray_background'),
         dict(image=easy_spheres(),
              title='easy_spheres'),
         dict(image=medium(),
@@ -114,4 +112,6 @@ def get_full_dataset() -> list:
              title='light_many'),
         dict(image=easy_medium_many(),
              title='easy_medium_many'),
+        dict(image=small(),
+             title='small'),
     ]
