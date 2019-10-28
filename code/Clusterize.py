@@ -1,9 +1,9 @@
 import numpy as np
 from skimage import transform, color
+from skimage.filters import rank
+from skimage.morphology import disk
 from sklearn.cluster import spectral_clustering
 from sklearn.feature_extraction import img_to_graph
-
-from Utils import visualize
 
 
 class Clusterize:
@@ -27,7 +27,8 @@ class Clusterize:
 
     def to_gray(self) -> None:
         for i, image in enumerate(self.image_list):
-            self.image_list[i] = color.rgb2gray(image)
+            image = color.rgb2gray(image)
+            self.image_list[i] = rank.median(image, disk(2))
 
     def make_graph(self) -> list:
         result = []
@@ -59,6 +60,7 @@ class Clusterize:
                 **kwargs
             )
             self.labels = self.labels.reshape(image.shape)
+            print('Spectral clustering complete for', i)
 
             self.labels[image == 0] = -1
 
