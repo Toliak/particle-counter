@@ -4,3 +4,4 @@ local.py
 Pipfile.lock
 data
 .ipynb_checkpoints
+*build*
