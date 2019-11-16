@@ -5,15 +5,16 @@ from skimage.morphology import disk
 from sklearn.cluster import spectral_clustering
 from sklearn.feature_extraction import img_to_graph
 
+from AlgorithmList import AlgorithmList
 
-class Clusterize:
+
+class Clusterize(AlgorithmList):
     def __init__(self, image_list, graph_beta=10, graph_eps=1e-6, max_transform_size=None):
-        self.image_list = image_list
+        super().__init__(image_list)
+
         self.graph_eps = graph_eps
         self.graph_beta = graph_beta
         self.labels = None
-
-        self.to_gray()
 
         if max_transform_size is not None:
             self.transform(max_transform_size)
@@ -24,11 +25,6 @@ class Clusterize:
         for i, image in enumerate(self.image_list):
             self.image_list[i] = transform.resize(image,
                                                   (np.array(image.shape) / np.max(image.shape) * max_size).astype(int))
-
-    def to_gray(self) -> None:
-        for i, image in enumerate(self.image_list):
-            image = color.rgb2gray(image)
-            self.image_list[i] = rank.median(image, disk(2))
 
     def make_graph(self) -> list:
         result = []
