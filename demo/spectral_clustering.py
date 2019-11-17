@@ -4,7 +4,7 @@ import matplotlib.pyplot as plot
 from skimage.exposure import adjust_sigmoid
 
 import Dataset
-from Clusterize import Clusterize
+from SpectralClustering import Clusterize
 from Utils import visualize
 from ImageChecker import is_atomic, label_peak_list
 

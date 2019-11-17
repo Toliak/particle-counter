@@ -14,15 +14,19 @@ class Clusterize(AlgorithmList):
 
         self.graph_eps = graph_eps
         self.graph_beta = graph_beta
-        self.labels = None
 
         if max_transform_size is not None:
             self.transform(max_transform_size)
 
         self.graph_list = self.make_graph()
+        self.graph_list_result = []
+        self.labels_result = []
 
     def transform(self, max_size) -> None:
         for i, image in enumerate(self.image_list):
+            if np.min(image.shape) <= max_size:
+                continue
+
             self.image_list[i] = transform.resize(image,
                                                   (np.array(image.shape) / np.max(image.shape) * max_size).astype(int))
 
@@ -48,21 +52,26 @@ class Clusterize(AlgorithmList):
 
     def apply(self, **kwargs) -> list:
         result = []
+        self.graph_list_result = []
 
         for i, graph in enumerate(self.graph_list):
             image = self.image_list[i]
-            self.labels = spectral_clustering(
+
+            labels = spectral_clustering(
                 graph,
                 **kwargs
             )
-            self.labels = self.labels.reshape(image.shape)
+
+            labels = labels.reshape(image.shape)
+            labels[image == 0] = -1
+
             print('Spectral clustering complete for', i)
 
-            self.labels[image == 0] = -1
-
-            for label_index in range(0, self.labels.max() + 1):
+            for label_index in range(0, labels.max() + 1):
                 result.append(
-                    self.crop_by_mask(image, self.labels == label_index)
+                    self.crop_by_mask(image, labels == label_index)
                 )
+
+            self.labels_result.append(labels)
 
         return result
