@@ -1,7 +1,5 @@
 import numpy as np
-from skimage import transform, color
-from skimage.filters import rank
-from skimage.morphology import disk
+from skimage import transform
 from sklearn.cluster import spectral_clustering
 from sklearn.feature_extraction import img_to_graph
 
