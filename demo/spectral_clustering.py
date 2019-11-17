@@ -4,7 +4,7 @@ import matplotlib.pyplot as plot
 from skimage.exposure import adjust_sigmoid
 
 import Dataset
-from SpectralClustering import Clusterize
+from SpectralClustering import SpectralClustering
 from Utils import visualize
 from ImageChecker import is_atomic, label_peak_list
 
@@ -37,7 +37,7 @@ result = [original]
 
 for i in range(0, ITERATIONS):
     print('Clusterization iteration ', i)
-    clusterize = Clusterize(result,
+    clusterize = SpectralClustering(result,
                             graph_beta=GRAPH_BETA[i],
                             graph_eps=GRAPH_EPS[i],
                             max_transform_size=FIRST_MAX_TRANSFORM_SIZE if i == 0 else None)
@@ -50,9 +50,6 @@ for i in range(0, ITERATIONS):
                               eigen_solver='amg',
                               assign_labels=LABELS[i],
                               random_state=1)
-
-    if i == 0:
-        visualize(clusterize.labels, 'labels first')
 
     display_all(result, RESULT_OUTPUT_SIZE[i])
     display_all(label_peak_list(result), RESULT_OUTPUT_SIZE[i])

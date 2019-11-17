@@ -8,7 +8,7 @@ from sklearn.feature_extraction import img_to_graph
 from AlgorithmList import AlgorithmList
 
 
-class Clusterize(AlgorithmList):
+class SpectralClustering(AlgorithmList):
     def __init__(self, image_list, graph_beta=10, graph_eps=1e-6, max_transform_size=None):
         super().__init__(image_list)
 
