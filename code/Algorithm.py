@@ -19,7 +19,7 @@ class Algorithm:
     particle_amount = None
 
     def __init__(self, image):
-        """Инициализация порогового алгоритма
+        """Инициализация алгоритма
 
 Копирует переданное изображение
 
@@ -54,13 +54,10 @@ class Threshold(Algorithm):
     ## Пороговое значение
     threshold_value = None
 
+    ## Количество частиц
+    particle_amount = None
+
     def __init__(self, image):
-        """Инициализация порогового алгоритма
-
-Копирует переданное изображение
-
-@param image: Изображение для обработки
-        """
         super().__init__(image)
 
     def apply_threshold(self, function):
@@ -87,13 +84,10 @@ class Watershed(Algorithm):
     ## Минимальная яркость для маркировки
     MINIMAL_GRAY_MARKER = 150
 
+    ## Количество частиц
+    particle_amount = None
+
     def __init__(self, image):
-        """Инициализация алгоритма водоразделов
-
-Копирует переданное изображение
-
-@param image: Изображение для обработки
-        """
         super().__init__(image)
 
     def apply(self):
