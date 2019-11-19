@@ -1,4 +1,4 @@
-"""@package demo
+"""@package threshold
 Демонстрационный модуль для порогового алгоритма
 """
 import os

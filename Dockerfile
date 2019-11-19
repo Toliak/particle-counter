@@ -15,6 +15,4 @@ RUN set -ex && \
     pipenv install --deploy --system --skip-lock && \
     apt-get remove -y $PACKAGES
 
-WORKDIR /opt/builder
-
-COPY . /opt/builder
+VOLUME /opt/builder
