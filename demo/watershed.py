@@ -1,4 +1,4 @@
-"""@package demo
+"""@package watershed
 Демонстрационный модуль для порогового алгоритма
 """
 import os
