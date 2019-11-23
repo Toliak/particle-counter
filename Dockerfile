@@ -16,3 +16,4 @@ RUN set -ex && \
     apt-get remove -y $PACKAGES
 
 VOLUME /opt/builder
+WORKDIR /opt/builder
