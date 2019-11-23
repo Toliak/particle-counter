@@ -3,9 +3,6 @@
 ## Задача
 
 
-## Файлы
-
-[Литература](https://s3.toliak.ru/minio/course-project-2019/literature/)
 
 ## Сборка
 
@@ -29,6 +26,6 @@ python3 demo/$APP_NAME.py
 ## Запуск с использованием Docker
 
 ```bash
-docker build . --tag particle_bootstrap
-docker run --rm -it -v $(pwd):/opt/builder/ particle_bootstrap
+APP_NAME=threshold|watershed|spectral_clustering
+./scripts/docker.sh python demo/$APP_NAME.py
 ```
