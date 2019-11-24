@@ -9,6 +9,8 @@ import imageio
 import matplotlib.pyplot as plot
 from skimage.filters import threshold_isodata, threshold_mean, threshold_triangle, threshold_otsu
 
+sys.path.append('code')
+
 import Dataset
 from Algorithm import Threshold
 
