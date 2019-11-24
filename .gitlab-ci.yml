@@ -1,12 +1,32 @@
-deploy docker:
+.deploy_docker: &deployment_script
   image: docker:latest
 
-  script:
+  before_script:
     - docker build . --tag toliak/course-project-2019
-    - docker login --username Toliak -p $DOCKER_KEY
+    - docker login --username Toliak -p $DOCKERHUB_KEY
+
+deploy:docker:prod:
+  <<: *deployment_script
+
+  script:
     - docker push toliak/course-project-2019:latest
 
   only:
     changes:
       - Dockerfile
       - Pipfile
+    refs:
+      - master
+
+deploy:docker:dev:
+  <<: *deployment_script
+
+  script:
+    - docker push toliak/course-project-2019:dev
+
+  only:
+    changes:
+      - Dockerfile
+      - Pipfile
+    refs:
+      - develop
