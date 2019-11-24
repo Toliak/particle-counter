@@ -4,6 +4,7 @@
 from typing import List
 
 import numpy as np
+from scipy.ndimage import gaussian_filter
 from scipy.sparse import coo_matrix
 from skimage import color, transform
 from skimage.filters import rank
@@ -42,7 +43,7 @@ class AlgorithmList:
         @param level: Радиус диска (ядра)
         """
         for i, image in enumerate(self.image_list):
-            self.image_list[i] = rank.median(image, disk(2))
+            self.image_list[i] = gaussian_filter(image, sigma=2)
 
 
 class SpectralClustering(AlgorithmList):
@@ -89,7 +90,9 @@ class SpectralClustering(AlgorithmList):
                 continue
 
             self.image_list[i] = transform.resize(image,
-                                                  (np.array(image.shape) / np.max(image.shape) * max_size).astype(int))
+                                                  (np.array(image.shape) / np.max(image.shape) * max_size).astype(int),
+                                                  mode='reflect')
+
 
     def make_graph(self):
         """Создание графов

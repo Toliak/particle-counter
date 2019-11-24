@@ -9,6 +9,8 @@ import imageio
 import matplotlib.pyplot as plot
 from skimage.filters import threshold_isodata, threshold_mean, threshold_triangle, threshold_otsu
 
+from Utils import get_artifact_path
+
 sys.path.append('code')
 
 import Dataset
@@ -63,9 +65,7 @@ def evaluate(image_path=None):
 
         print(f'Complete {title}')
 
-    if not os.path.exists('../artifacts/'):
-        os.makedirs('../artifacts/')
-    plot.savefig(f'../artifacts/threshold_{datetime.now().timestamp()}.png',
+    plot.savefig(get_artifact_path(f'threshold_{datetime.now().timestamp()}'),
                  bbox_inches='tight')
 
 

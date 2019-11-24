@@ -1,12 +1,13 @@
 """@package Utils
 Утилитарный функции
 """
+import os
 
 import matplotlib.pyplot as plot
 from skimage.color import rgb2gray
 
 
-def visualize(image, label='', cmap='viridis', figsize=(8,8)):
+def visualize(image, label='', cmap='viridis', figsize=(8, 8)):
     """Простая визуализация изображения
 
     @param image: Изображение
@@ -35,3 +36,16 @@ def image_to_grayscale(image):
     result *= (255.0 / result.max())  # rescale
 
     return result
+
+
+def get_artifact_path(name):
+    """Получение пути для сохранения артефакта. Создание
+
+    @param name: Название артефакта
+
+    @return Путь для сохранения
+    """
+
+    if not os.path.exists('../artifacts/'):
+        os.makedirs('../artifacts/')
+    return f'../artifacts/{name}.png'
