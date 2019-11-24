@@ -1,7 +1,14 @@
 .deploy_docker: &deployment_script
-  image: docker:latest
+  image: docker:19.03.1
+
+  variables:
+    DOCKER_TLS_CERTDIR: "/certs"
+
+  services:
+    - docker:19.03.1-dind
 
   before_script:
+    - docker info
     - docker build . --tag toliak/course-project-2019
     - docker login --username Toliak -p $DOCKERHUB_KEY
 
