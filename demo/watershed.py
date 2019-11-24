@@ -8,27 +8,26 @@ import imageio
 import matplotlib.pyplot as plot
 
 import config.config_watershed as config
-from ..code import Dataset
-from ..code.Algorithm import Watershed
-from ..code.Utils import get_artifact_path
+
+sys.path.append('code')
 
 
-def save_iteration(i, subplot_rows, subplot_cols, watershed, result_image, title):
+def save_iteration(index, subplot_rows, subplot_cols, watershed, result_image, title):
     """Сохранение результатов итерации
-    @param i: Индекс изображения
+    @param index: Индекс изображения
     @param subplot_rows: Количество строк
     @param subplot_cols: Количество столбцов
     @param watershed: Объект обертки алгоритма водоразделов
     @param result_image: Результирующее изображение
     @param title: Заголовок изображения
     """
-    subplot_index = i * subplot_cols + 1
+    subplot_index = index * subplot_cols + 1
     plot.subplot(subplot_rows, subplot_cols, subplot_index)
     plot.imshow(watershed.image)
     plot.axis('off')
     plot.title(f'Grayscale {title}')
 
-    subplot_index = i * subplot_cols + 2
+    subplot_index = index * subplot_cols + 2
     plot.subplot(subplot_rows, subplot_cols, subplot_index)
     plot.imshow(result_image)
     plot.axis('off')
@@ -48,18 +47,20 @@ def evaluate(image_path=None):
         dataset_list = Dataset.get_full_dataset()
         images_len = len(dataset_list)
 
+    subplot_rows = images_len  # Количество строк в визуализации
+    subplot_cols = 2  # Количество столбцов в визуализации
+
     plot.figure(figsize=config.FIGSIZE)
-    subplot_rows = images_len
-    subplot_cols = 2
     plot.subplots_adjust(**config.SUBPLOT_ADJUST)
 
     for i, data in enumerate(dataset_list):
         image, title = data['image'], data['title']
 
+        # Выполнение алгоритма водораздела
         watershed = Watershed(image)
-
         result_image = watershed.apply()
-        save_iteration(i=i,
+
+        save_iteration(index=i,
                        subplot_rows=subplot_rows,
                        subplot_cols=subplot_cols,
                        watershed=watershed,
@@ -73,6 +74,9 @@ def evaluate(image_path=None):
 
 
 if __name__ == '__main__':
+    import Dataset
+    from Algorithm import Watershed
+    from Utils import get_artifact_path
 
     ## @copydoc Algorithm.Watershed::MINIMAL_GRAY
     Watershed.MINIMAL_GRAY = config.WATERSHED_MINIMAL_GRAY

@@ -9,9 +9,8 @@ import matplotlib.pyplot as plot
 from skimage.filters import threshold_isodata, threshold_mean, threshold_triangle, threshold_otsu
 
 import config.config_threshold as config
-from Utils import get_artifact_path
-from ..code import Dataset
-from ..code.Algorithm import Threshold
+
+sys.path.append('code')
 
 
 def evaluate(image_path=None):
@@ -66,6 +65,10 @@ def evaluate(image_path=None):
 
 
 if __name__ == '__main__':
+    from Utils import get_artifact_path
+    import Dataset
+    from Algorithm import Threshold
+
     if len(sys.argv) >= 2:
         evaluate(sys.argv[1])
     else:
