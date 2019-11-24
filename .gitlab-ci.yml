@@ -12,6 +12,12 @@
     - docker build . --tag toliak/course-project-2019
     - docker login --username toliak -p $DOCKERHUB_KEY
 
+  only:
+    changes:
+      - Dockerfile
+      - Pipfile
+      - .gitlab-ci.yml
+
 deploy:docker:prod:
   <<: *deployment_script
 
@@ -19,9 +25,6 @@ deploy:docker:prod:
     - docker push toliak/course-project-2019:latest
 
   only:
-    changes:
-      - Dockerfile
-      - Pipfile
     refs:
       - master
 
@@ -32,8 +35,5 @@ deploy:docker:dev:
     - docker push toliak/course-project-2019:dev
 
   only:
-    changes:
-      - Dockerfile
-      - Pipfile
     refs:
       - develop
