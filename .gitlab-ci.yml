@@ -1,11 +1,11 @@
 .deploy_docker: &deployment_script
-  image: docker:19.03.1
+  image: docker:18.09.7
 
   variables:
     DOCKER_TLS_CERTDIR: "/certs"
 
   services:
-    - docker:19.03.1-dind
+    - docker:18.09.7-dind
 
   before_script:
     - docker info
