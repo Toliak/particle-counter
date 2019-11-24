@@ -25,8 +25,11 @@ deploy:docs:dev:
     - docker:18.09.7-dind
 
   before_script:
-    - docker build . --tag toliak/course-project-2019
+    - docker build . --tag toliak/course-project-2019:$TAG_NAME
     - docker login --username toliak -p $DOCKERHUB_KEY
+
+  script:
+    - docker push toliak/course-project-2019:$TAG_NAME
 
   only:
     changes:
@@ -37,8 +40,8 @@ deploy:docs:dev:
 deploy:docker:prod:
   <<: *deploy_docker
 
-  script:
-    - docker push toliak/course-project-2019:latest
+  variables:
+    $TAG_NAME: "master"
 
   only:
     refs:
@@ -47,8 +50,8 @@ deploy:docker:prod:
 deploy:docker:dev:
   <<: *deploy_docker
 
-  script:
-    - docker push toliak/course-project-2019:dev
+  variables:
+    $TAG_NAME: "dev"
 
   only:
     refs:
