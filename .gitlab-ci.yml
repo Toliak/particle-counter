@@ -10,7 +10,7 @@
   before_script:
     - docker info
     - docker build . --tag toliak/course-project-2019
-    - docker login --username Toliak -p $DOCKERHUB_KEY
+    - docker login --username toliak -p $DOCKERHUB_KEY
 
 deploy:docker:prod:
   <<: *deployment_script
