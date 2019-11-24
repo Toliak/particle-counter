@@ -1,63 +1,39 @@
+"""@package spectral_clustering
+Демонстрационный модуль для алгоритма спектральной кластеризации
+"""
 import sys
 from datetime import datetime
 from math import ceil
 
+import imageio
 import matplotlib.pyplot as plot
 
 import config.config_spectral_clustering as config
-from Utils import get_artifact_path
-
-
-from ..code import Dataset
-from ..code.AlgorithmList import SpectralClustering
-
 from ImageChecker import is_atomic, is_background, label_peak_amount
 
+sys.path.append('code')
 
-def display_all(images, size):
-    plot.figure(figsize=size)
+def zero_iteration(clustering):
+    """Действия на 1й итерации
+    @param clustering: Объект обертки алгоритма кластеризации
+    """
+    plot.figure(figsize=(8, 8))
+    plot.axis('off')
+    plot.imshow(clustering.image_list[0], cmap='viridis')
+    plot.title('input')
 
-    row_amount = ceil(len(images) / 5)
-    for i, img in enumerate(images):
-        plot.subplot(row_amount, 5, i + 1)
-        plot.imshow(img)
-        plot.title(f'image {i}')
-
-    plot.show()
+    plot.savefig(get_artifact_path(f'clustering_input_{datetime.now().timestamp()}'),
+                 bbox_inches='tight')
 
 
-original = Dataset.load_by_path('test_cluster.png')
-
-final_particles = []
-result = [original]
-
-for i in range(0, config.ITERATIONS):
-    print('Clusterization iteration ', i)
-    clusterize = SpectralClustering(result,
-                                    graph_beta=config.GRAPH_BETA[i],
-                                    graph_eps=config.GRAPH_EPS[i],
-                                    max_transform_size=config.FIRST_MAX_TRANSFORM_SIZE if i == 0 else None)
-
-    if i == 0:
-        plot.figure(figsize=(8, 8))
-        plot.axis('off')
-        plot.imshow(clusterize.image_list[0], cmap='viridis')
-        plot.title('input')
-
-        plot.savefig(get_artifact_path(f'clustering_input_{datetime.now().timestamp()}'),
-                     bbox_inches='tight')
-
-    result = clusterize.apply(n_clusters=config.N_CLUSTERS[i],
-                              n_init=config.N_INIT[i],
-                              eigen_solver='amg',
-                              assign_labels=config.LABELS[i],
-                              random_state=config.RANDOM_STATE)
-
-    plot.figure(figsize=config.RESULT_OUTPUT_SIZE[i])
-
+def result_processing(result, row_amount, final_particles):
+    """Обработка промежуточного результата
+    @param result: Список кластеризованных изображений
+    @param row_amount: Количество строк в визуализации
+    @param final_particles: Список с результирующими изображениями частиц
+    @return Список отмеченных индексов на удаление
+    """
     remove_indexes = []
-
-    row_amount = ceil(len(result) / 5) * 2
 
     for j, img in enumerate(result):
         is_bg = is_background(img)
@@ -82,26 +58,69 @@ for i in range(0, config.ITERATIONS):
                 final_particles.append(img.copy())
                 remove_indexes.append(j)
 
-    plot.savefig(get_artifact_path(f'clustering_{i}_{datetime.now().timestamp()}'),
+    return remove_indexes
+
+
+def evaluate(image_path=None):
+    """Демонстрация алгоритма спектральной кластеризации
+    @param image_path: Пусть к изображению. Если None, то используется стандартное изображение
+    """
+    if image_path:
+        original_image = dict(image=imageio.imread(image_path),
+                              title=image_path)
+    else:
+        original_image = Dataset.load_by_path('test_cluster.png')
+
+    final_particles = []  # Результирующие изображения частиц
+    result = [original_image]  # Промежуточные изображения
+
+    for i in range(0, config.ITERATIONS):
+        print('Clusterization iteration ', i)
+        clusterize = SpectralClustering(result,
+                                        graph_beta=config.GRAPH_BETA[i],
+                                        graph_eps=config.GRAPH_EPS[i],
+                                        max_transform_size=config.FIRST_MAX_TRANSFORM_SIZE if i == 0 else None)
+
+        if i == 0:
+            zero_iteration(clustering=clusterize)
+
+        result = clusterize.apply(n_clusters=config.N_CLUSTERS[i],
+                                  n_init=config.N_INIT[i],
+                                  eigen_solver='amg',
+                                  assign_labels=config.LABELS[i],
+                                  random_state=config.RANDOM_STATE)
+
+        row_amount = ceil(len(result) / 5) * 2  # Количество строк в визуализации
+        plot.figure(figsize=config.RESULT_OUTPUT_SIZE[i])
+
+        remove_indexes = result_processing(result=result,
+                                           row_amount=row_amount,
+                                           final_particles=final_particles)
+        plot.savefig(get_artifact_path(f'clustering_{i}_{datetime.now().timestamp()}'),
+                     bbox_inches='tight')
+
+        # Удаление отмеченных изображений
+        for index in sorted(remove_indexes, reverse=True):
+            del result[index]
+
+    final_particles.extend(result)
+
+    plot.figure(figsize=config.FIGSIZE)
+    row_amount = ceil(len(final_particles) / 5)
+    for j, img in enumerate(final_particles):
+        plot.subplot(row_amount, 5, j + 1)
+        plot.imshow(img)
+
+    plot.savefig(get_artifact_path(f'clustering_output_{datetime.now().timestamp()}'),
                  bbox_inches='tight')
+    print(f'Result amount: {len(final_particles)}')
 
-    # Remove background-only images
-    for index in sorted(remove_indexes, reverse=True):
-        del result[index]
-
-final_particles.extend(result)
-
-plot.figure(figsize=(15, 15))
-row_amount = ceil(len(final_particles) / 5)
-for j, img in enumerate(final_particles):
-    plot.subplot(row_amount, 5, j + 1)
-    plot.imshow(img)
-
-plot.savefig(get_artifact_path(f'clustering_output_{datetime.now().timestamp()}'),
-             bbox_inches='tight')
-print(f'Result amount: {len(final_particles)}')
 
 if __name__ == '__main__':
+    from Utils import get_artifact_path
+    import Dataset
+    from AlgorithmList import SpectralClustering
+
     assert len(config.GRAPH_BETA) >= config.ITERATIONS
     assert len(config.GRAPH_EPS) >= config.ITERATIONS
     assert len(config.N_CLUSTERS) >= config.ITERATIONS
@@ -109,4 +128,7 @@ if __name__ == '__main__':
     assert len(config.LABELS) >= config.ITERATIONS
     assert len(config.RESULT_OUTPUT_SIZE) >= config.ITERATIONS
 
-
+    if len(sys.argv) >= 2:
+        evaluate(sys.argv[1])
+    else:
+        evaluate()

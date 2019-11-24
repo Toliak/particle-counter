@@ -48,4 +48,7 @@ def get_artifact_path(name):
 
     if not os.path.exists('../artifacts/'):
         os.makedirs('../artifacts/')
-    return f'../artifacts/{name}.png'
+
+    path = f'../artifacts/{name}.png'
+    print(f'New artifact: {path}')
+    return path
