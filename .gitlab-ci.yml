@@ -1,4 +1,21 @@
-.deploy_docker: &deployment_script
+.deploy_docs: &deploy_docs
+  image: nxpleuvenjenkins/doxygen
+
+  before_script:
+    - apt-get update -y
+    - apt-get install -y sshpass openssh-client
+
+deploy:docs:dev:
+  <<: *deploy_docs
+
+  script:
+    - doxygen Doxyfile
+
+  only:
+    refs:
+      - develop
+
+.deploy_docker: &deploy_docker
   image: docker:18.09.7
 
   variables:
@@ -8,7 +25,6 @@
     - docker:18.09.7-dind
 
   before_script:
-    - docker info
     - docker build . --tag toliak/course-project-2019
     - docker login --username toliak -p $DOCKERHUB_KEY
 
@@ -19,7 +35,7 @@
       - .gitlab-ci.yml
 
 deploy:docker:prod:
-  <<: *deployment_script
+  <<: *deploy_docker
 
   script:
     - docker push toliak/course-project-2019:latest
@@ -29,7 +45,7 @@ deploy:docker:prod:
       - master
 
 deploy:docker:dev:
-  <<: *deployment_script
+  <<: *deploy_docker
 
   script:
     - docker push toliak/course-project-2019:dev
