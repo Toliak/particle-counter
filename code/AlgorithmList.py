@@ -1,14 +1,10 @@
 """@package AlgorithmList
 Родительский класс для реализаций алгоритмов сегментации (со списком изображений)
 """
-from typing import List
 
 import numpy as np
 from scipy.ndimage import gaussian_filter
-from scipy.sparse import coo_matrix
 from skimage import color, transform
-from skimage.filters import rank
-from skimage.morphology import disk
 from sklearn.cluster import spectral_clustering
 from sklearn.feature_extraction import img_to_graph
 
@@ -20,17 +16,22 @@ class AlgorithmList:
     ## Целевые изображения
     image_list = None
 
-    def __init__(self, image_list):
+    def __init__(self, image_list, max_transform_size=None):
         """Инициализация алгоритма
 
 Копирует переданные изображения
 
 @param image_list: Изображения для обработки
+@param max_transform_size: Максимальный размер изображения
+Если изображение больше этого размера - оно сжимается
         """
         self.image_list = [i.copy() for i in image_list]
 
         self.to_gray()
         self.remove_noise()
+
+        if max_transform_size is not None:
+            self.transform(max_transform_size)
 
     def to_gray(self):
         """Преобразование изображений в оттенки серого
@@ -45,41 +46,18 @@ class AlgorithmList:
         for i, image in enumerate(self.image_list):
             self.image_list[i] = gaussian_filter(image, sigma=2)
 
-
-class SpectralClustering(AlgorithmList):
-    """Реализация алгоритма спектральной кластеризации
-    """
-
-    ## Константа формулы построения графа: бета
-    graph_beta = None
-
-    ## Константа формулы построения графа: эпсилон
-    graph_eps = None
-
-    ## Список преобразованных в графы изображений
-    graph_list = None
-
-    ## Список изображений, характеризующих разбиение на кластеры
-    labels_result = None
-
-    def __init__(self, image_list, graph_beta=10, graph_eps=1e-6, max_transform_size=None):
+    @staticmethod
+    def crop_by_mask(image, mask):
+        """Максимально возможное кадрирование изображения после наложения маски
+        @return Кадрированное изображение
         """
-        @copydoc AlgorithmList::\_\_init\_\_()
-        @param graph_beta: Константа формулы построения графа: бета
-        @param graph_eps: Константа формулы построения графа: эпсилон
-        @param max_transform_size: Максимальный размер изображения
-Если изображение больше этого размера - оно сжимается
-        """
-        super().__init__(image_list)
+        crop = image.copy()
+        crop[mask == False] = 0
 
-        self.graph_beta = graph_beta
-        self.graph_eps = graph_eps
-
-        if max_transform_size is not None:
-            self.transform(max_transform_size)
-
-        self.graph_list = self.make_graph()
-        self.labels_result = []
+        crop = crop[~(crop == 0).all(1)]
+        crop = crop.T
+        crop = crop[~(crop == 0).all(1)]
+        return crop.T
 
     def transform(self, max_size):
         """Уменьшение разрешения изображения, если исходное больше заданного
@@ -94,6 +72,36 @@ class SpectralClustering(AlgorithmList):
                                                   mode='reflect')
 
 
+class SpectralClustering(AlgorithmList):
+    """Реализация алгоритма спектральной кластеризации
+    """
+
+    ## Константа нормирования весов графа, множитель степени экспоненты
+    graph_beta = None
+
+    ## Константа нормирования весов графа, сдвиг степени экспоненты
+    graph_eps = None
+
+    ## Список преобразованных в графы изображений
+    graph_list = None
+
+    ## Список изображений, характеризующих разбиение на кластеры
+    labels_result = None
+
+    def __init__(self, image_list, graph_beta=10, graph_eps=1e-6, max_transform_size=None):
+        """
+        @copydoc AlgorithmList::\_\_init\_\_()
+        @param graph_beta: Константа формулы построения графа: бета
+        @param graph_eps: Константа формулы построения графа: эпсилон
+        """
+        super().__init__(image_list, max_transform_size)
+
+        self.graph_beta = graph_beta
+        self.graph_eps = graph_eps
+
+        self.graph_list = self.make_graph()
+        self.labels_result = []
+
     def make_graph(self):
         """Создание графов
         @return Список графов, причем индекс графа совпадает с индексом изображения
@@ -106,19 +114,6 @@ class SpectralClustering(AlgorithmList):
             result.append(graph)
 
         return result
-
-    @staticmethod
-    def crop_by_mask(image, mask):
-        """Максимально возможное кадрирование изображения после наложения маски
-        @return Кадрированное изображение
-        """
-        crop = image.copy()
-        crop[mask == False] = 0
-
-        crop = crop[~(crop == 0).all(1)]
-        crop = crop.T
-        crop = crop[~(crop == 0).all(1)]
-        return crop.T
 
     def apply(self, **kwargs):
         """Максимально возможное кадрирование изображения после наложения маски
