@@ -1,20 +1,43 @@
 """@package watershed
-Демонстрационный модуль для порогового алгоритма
+Демонстрационный модуль для алгоритма водоразделов
 """
-import os
 import sys
 from datetime import datetime
 
 import imageio
 import matplotlib.pyplot as plot
-from skimage.filters import threshold_isodata, threshold_mean, threshold_triangle, threshold_otsu
 
-import Dataset
-from Algorithm import Watershed
+import config.config_watershed as config
+from ..code import Dataset
+from ..code.Algorithm import Watershed
+from ..code.Utils import get_artifact_path
+
+
+def save_iteration(i, subplot_rows, subplot_cols, watershed, result_image, title):
+    """Сохранение результатов итерации
+    @param i: Индекс изображения
+    @param subplot_rows: Количество строк
+    @param subplot_cols: Количество столбцов
+    @param watershed: Объект обертки алгоритма водоразделов
+    @param result_image: Результирующее изображение
+    @param title: Заголовок изображения
+    """
+    subplot_index = i * subplot_cols + 1
+    plot.subplot(subplot_rows, subplot_cols, subplot_index)
+    plot.imshow(watershed.image)
+    plot.axis('off')
+    plot.title(f'Grayscale {title}')
+
+    subplot_index = i * subplot_cols + 2
+    plot.subplot(subplot_rows, subplot_cols, subplot_index)
+    plot.imshow(result_image)
+    plot.axis('off')
+    plot.title(f'Result {title}\n'
+               f'Amount: {watershed.particle_amount}')
 
 
 def evaluate(image_path=None):
-    """Демонстрация алгоритма порогового фильтра
+    """Демонстрация алгоритма водоразделов
     @param image_path: Пусть к изображению. Если None, то используется стандартный датасет
     """
     if image_path:
@@ -25,41 +48,38 @@ def evaluate(image_path=None):
         dataset_list = Dataset.get_full_dataset()
         images_len = len(dataset_list)
 
-    plot.figure(figsize=(10, 70))
+    plot.figure(figsize=config.FIGSIZE)
     subplot_rows = images_len
     subplot_cols = 2
-    plot.subplots_adjust(top=0.92, bottom=0.08, left=0.10, right=0.95, hspace=0.3,
-                         wspace=0.35)
+    plot.subplots_adjust(**config.SUBPLOT_ADJUST)
 
     for i, data in enumerate(dataset_list):
         image, title = data['image'], data['title']
 
-        threshold = Watershed(image)
+        watershed = Watershed(image)
 
-        subplot_index = i * subplot_cols + 1
-        plot.subplot(subplot_rows, subplot_cols, subplot_index)
-        plot.imshow(threshold.image)
-        plot.axis('off')
-        plot.title(f'Grayscale {title}')
-
-        result_image = threshold.apply()
-
-        subplot_index = i * subplot_cols + 2
-        plot.subplot(subplot_rows, subplot_cols, subplot_index)
-        plot.imshow(result_image)
-        plot.axis('off')
-        plot.title(f'Result {title}\n'
-                   f'Amount: {threshold.particle_amount}')
+        result_image = watershed.apply()
+        save_iteration(i=i,
+                       subplot_rows=subplot_rows,
+                       subplot_cols=subplot_cols,
+                       watershed=watershed,
+                       result_image=result_image,
+                       title=title)
 
         print(f'Complete {title}')
 
-    if not os.path.exists('../artifacts/'):
-        os.makedirs('../artifacts/')
-    plot.savefig(f'../artifacts/watershed_{datetime.now().timestamp()}.png',
+    plot.savefig(get_artifact_path(f'watershed_{datetime.now().timestamp()}'),
                  bbox_inches='tight')
 
 
 if __name__ == '__main__':
+
+    ## @copydoc Algorithm.Watershed::MINIMAL_GRAY
+    Watershed.MINIMAL_GRAY = config.WATERSHED_MINIMAL_GRAY
+
+    ## @copydoc Algorithm.Watershed::MINIMAL_GRAY_MARKER
+    Watershed.MINIMAL_GRAY_MARKER = config.WATERSHED_MINIMAL_GRAY_MARKER
+
     if len(sys.argv) >= 2:
         evaluate(sys.argv[1])
     else:

@@ -1,7 +1,6 @@
 """@package threshold
 Демонстрационный модуль для порогового алгоритма
 """
-import os
 import sys
 from datetime import datetime
 
@@ -9,12 +8,10 @@ import imageio
 import matplotlib.pyplot as plot
 from skimage.filters import threshold_isodata, threshold_mean, threshold_triangle, threshold_otsu
 
+import config.config_threshold as config
 from Utils import get_artifact_path
-
-sys.path.append('code')
-
-import Dataset
-from Algorithm import Threshold
+from ..code import Dataset
+from ..code.Algorithm import Threshold
 
 
 def evaluate(image_path=None):
@@ -37,9 +34,8 @@ def evaluate(image_path=None):
     subplot_rows = images_len
     subplot_cols = len(functions) + 1
 
-    plot.figure(figsize=(20, 70))
-    plot.subplots_adjust(top=0.92, bottom=0.08, left=0.10, right=0.95, hspace=0.3,
-                         wspace=0.35)
+    plot.figure(figsize=config.FIGSIZE)
+    plot.subplots_adjust(**config.SUBPLOT_ADJUST)
 
     for i, data in enumerate(dataset_list):
         image, title = data['image'], data['title']

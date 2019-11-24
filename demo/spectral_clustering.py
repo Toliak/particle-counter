@@ -1,16 +1,15 @@
-import os
 import sys
 from datetime import datetime
 from math import ceil
 
 import matplotlib.pyplot as plot
 
+import config.config_spectral_clustering as config
 from Utils import get_artifact_path
 
-sys.path.append('code')
 
-import Dataset
-from AlgorithmList import SpectralClustering
+from ..code import Dataset
+from ..code.AlgorithmList import SpectralClustering
 
 from ImageChecker import is_atomic, is_background, label_peak_amount
 
@@ -27,27 +26,17 @@ def display_all(images, size):
     plot.show()
 
 
-original = Dataset.load_by_path('test.png')
-# original = adjust_sigmoid(original)
-
-ITERATIONS = 3
-GRAPH_BETA = (15, 15, 15)
-GRAPH_EPS = (1e-6, 1e-6, 1e-6)
-N_CLUSTERS = (10, 5, 3)
-N_INIT = (2, 2, 2)
-LABELS = ('discretize', 'discretize', 'discretize')
-RESULT_OUTPUT_SIZE = ((10, 10), (15, 30), (15, 30))
-FIRST_MAX_TRANSFORM_SIZE = 256
+original = Dataset.load_by_path('test_cluster.png')
 
 final_particles = []
 result = [original]
 
-for i in range(0, ITERATIONS):
+for i in range(0, config.ITERATIONS):
     print('Clusterization iteration ', i)
     clusterize = SpectralClustering(result,
-                                    graph_beta=GRAPH_BETA[i],
-                                    graph_eps=GRAPH_EPS[i],
-                                    max_transform_size=FIRST_MAX_TRANSFORM_SIZE if i == 0 else None)
+                                    graph_beta=config.GRAPH_BETA[i],
+                                    graph_eps=config.GRAPH_EPS[i],
+                                    max_transform_size=config.FIRST_MAX_TRANSFORM_SIZE if i == 0 else None)
 
     if i == 0:
         plot.figure(figsize=(8, 8))
@@ -55,18 +44,16 @@ for i in range(0, ITERATIONS):
         plot.imshow(clusterize.image_list[0], cmap='viridis')
         plot.title('input')
 
-        if not os.path.exists('../artifacts/'):
-            os.makedirs('../artifacts/')
-        plot.savefig(f'../artifacts/clustering_input_{datetime.now().timestamp()}.png',
+        plot.savefig(get_artifact_path(f'clustering_input_{datetime.now().timestamp()}'),
                      bbox_inches='tight')
 
-    result = clusterize.apply(n_clusters=N_CLUSTERS[i],
-                              n_init=N_INIT[i],
+    result = clusterize.apply(n_clusters=config.N_CLUSTERS[i],
+                              n_init=config.N_INIT[i],
                               eigen_solver='amg',
-                              assign_labels=LABELS[i],
-                              random_state=1)
+                              assign_labels=config.LABELS[i],
+                              random_state=config.RANDOM_STATE)
 
-    plot.figure(figsize=RESULT_OUTPUT_SIZE[i])
+    plot.figure(figsize=config.RESULT_OUTPUT_SIZE[i])
 
     remove_indexes = []
 
@@ -113,3 +100,13 @@ for j, img in enumerate(final_particles):
 plot.savefig(get_artifact_path(f'clustering_output_{datetime.now().timestamp()}'),
              bbox_inches='tight')
 print(f'Result amount: {len(final_particles)}')
+
+if __name__ == '__main__':
+    assert len(config.GRAPH_BETA) >= config.ITERATIONS
+    assert len(config.GRAPH_EPS) >= config.ITERATIONS
+    assert len(config.N_CLUSTERS) >= config.ITERATIONS
+    assert len(config.N_INIT) >= config.ITERATIONS
+    assert len(config.LABELS) >= config.ITERATIONS
+    assert len(config.RESULT_OUTPUT_SIZE) >= config.ITERATIONS
+
+
