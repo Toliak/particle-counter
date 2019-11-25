@@ -10,8 +10,7 @@ from skimage.filters import threshold_isodata, threshold_mean, threshold_triangl
 
 import config.config_threshold as config
 
-sys.path.append('core')
-sys.path.append('../core')
+sys.path.append('..')
 
 
 def evaluate(image_path=None):
@@ -66,9 +65,9 @@ def evaluate(image_path=None):
 
 
 if __name__ == '__main__':
-    from Utils import get_artifact_path
-    import Dataset
-    from Algorithm import Threshold
+    from core.Utils import get_artifact_path
+    from core import Dataset
+    from core.Algorithm import Threshold
 
     if len(sys.argv) >= 2 and len(sys.argv[1]) > 0:
         evaluate(sys.argv[1])

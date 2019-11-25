@@ -10,8 +10,7 @@ import matplotlib.pyplot as plot
 
 import config.config_spectral_clustering as config
 
-sys.path.append('core')
-sys.path.append('../core')
+sys.path.append('..')
 
 
 def zero_iteration(clustering):
@@ -117,9 +116,9 @@ def evaluate(image_path=None):
 
 
 if __name__ == '__main__':
-    from Utils import get_artifact_path, is_background, label_peak_amount
-    import Dataset
-    from AlgorithmList import SpectralClustering
+    from core.Utils import get_artifact_path, is_background, label_peak_amount
+    from core import Dataset
+    from core.AlgorithmList import SpectralClustering
 
     assert len(config.GRAPH_BETA) >= config.ITERATIONS
     assert len(config.GRAPH_EPS) >= config.ITERATIONS

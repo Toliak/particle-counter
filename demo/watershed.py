@@ -9,8 +9,7 @@ import matplotlib.pyplot as plot
 
 import config.config_watershed as config
 
-sys.path.append('core')
-sys.path.append('../core')
+sys.path.append('..')
 
 
 def save_iteration(index, subplot_rows, subplot_cols, watershed, result_image, title):
@@ -75,9 +74,9 @@ def evaluate(image_path=None):
 
 
 if __name__ == '__main__':
-    import Dataset
-    from Algorithm import Watershed
-    from Utils import get_artifact_path
+    from core import Dataset
+    from core.Algorithm import Watershed
+    from core.Utils import get_artifact_path
 
     ## @copydoc core.Algorithm.Watershed::MINIMAL_GRAY
     Watershed.MINIMAL_GRAY = config.WATERSHED_MINIMAL_GRAY
