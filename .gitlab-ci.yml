@@ -4,13 +4,6 @@ stages:
   - deploy
 
 
-.deploy_docker: &deploy_docker
-  only:
-    changes:
-      - Dockerfile
-      - Pipfile
-      - .gitlab-ci.yml
-
 .env_docker: &env_docker
   image: docker:18.09.7
 
@@ -23,7 +16,6 @@ stages:
 
 build docker:
   <<: *env_docker
-  <<: *deploy_docker
 
   stage: build
 
@@ -31,6 +23,11 @@ build docker:
     - docker build . --tag deploy_image
     - mkdir -p images/
     - docker save -o images/deploy_image.tar deploy_image
+
+  only:
+    changes:
+      - Dockerfile
+      - Pipfile
 
   cache:
     key: ${CI_COMMIT_REF_SLUG}_docker
@@ -95,7 +92,7 @@ deploy docs:
   before_script:
     - apt-get update -y
     - apt-get install -y sshpass openssh-client
-    - \[\[ ${CI_COMMIT_REF_SLUG} = master \]\] \&\& SUB_DIR=latest || SUB_DIR=dev
+    - if [ ${CI_COMMIT_REF_SLUG} = master ]; then SUB_DIR=latest; else SUB_DIR=dev; fi
     - echo $SUB_DIR
 
   script:
@@ -122,12 +119,11 @@ deploy docs:
 
 deploy docker:
   <<: *env_docker
-  <<: *deploy_docker
 
   stage: deploy
 
   before_script:
-    - \[\[ ${CI_COMMIT_REF_SLUG} = master \]\] \&\& TAG_NAME=latest || TAG_NAME=dev
+    - if [ ${CI_COMMIT_REF_SLUG} = master ]; then TAG_NAME=latest; else TAG_NAME=dev; fi
     - echo $TAG_NAME
 
   script:
@@ -137,6 +133,9 @@ deploy docker:
     - docker push toliak/course-project-2019:$TAG_NAME
 
   only:
+    changes:
+      - Dockerfile
+      - Pipfile
     refs:
       - develop
       - master
