@@ -54,6 +54,7 @@ build docs:
     - cd build
     - cmake -G "Unix Makefiles" ..
     - make -j 4
+    - make install
 
   script:
     - cd ~
