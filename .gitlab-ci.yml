@@ -33,7 +33,7 @@ build docker:
       - master
 
   cache:
-    key: ${CI_COMMIT_REF_SLUG}
+    key: ${CI_COMMIT_REF_SLUG}_docker
     paths:
       - images/
     policy: push
@@ -53,7 +53,7 @@ build docs:
       - master
 
   cache:
-    key: ${CI_COMMIT_REF_SLUG}
+    key: ${CI_COMMIT_REF_SLUG}_docs
     paths:
       - doxygen-build/
     policy: push
@@ -68,7 +68,7 @@ tests:
     - docker run -t --rm -v $(pwd):/opt/builder/ -w /opt/builder/tests deploy_image pytest .
 
   cache:
-    key: ${CI_COMMIT_REF_SLUG}
+    key: ${CI_COMMIT_REF_SLUG}_docker
     paths:
       - images/
     policy: pull
