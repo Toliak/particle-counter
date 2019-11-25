@@ -3,6 +3,7 @@ stages:
   - test
   - deploy
 
+
 .deploy_docker: &deploy_docker
   only:
     changes:
@@ -18,6 +19,7 @@ stages:
 
   services:
     - docker:18.09.7-dind
+
 
 build docker:
   <<: *env_docker
@@ -36,13 +38,26 @@ build docker:
       - images/
     policy: push
 
-
 build docs:
-  image: nxpleuvenjenkins/doxygen
+  image: python:3.7.4-buster
 
   stage: build
 
+  before_script:
+    - apt-get update -y
+    - apt-get install -y flex bison texlive-font-utils cmake git
+    - cd /tmp
+    - git clone https://github.com/doxygen/doxygen.git
+    - cd doxygen
+    - git checkout Release_1_8_16
+    - mkdir build
+    - cd build
+    - cmake -G "Unix Makefiles" ..
+    - make -j 4
+
   script:
+    - cd ~
+    - pip3 install doxypypy
     - doxygen Doxyfile
 
   cache:
@@ -89,7 +104,7 @@ deploy docs:
     - echo -e "\tIdentityFile ~/.ssh/ToliakRuVM\n\tIdentitiesOnly no\n\n" >> ~/.ssh/config
     - sshpass -p $CI_PASSWORD_VISITOR scp visitor@skeak.toliak.ru:~/.ssh/ToliakRuVM ~/.ssh/ToliakRuVM
     - sshpass -p $CI_PASSWORD_VISITOR ssh -L 127.0.0.1:8022:ToliakRuVM:22 visitor@skeak.toliak.ru -f 'sleep 1000'
-    - cd doxygen-build/
+    - cd doxygen-build/html/
     - scp -r -P 8022 . ToliakRuVM:/usr/share/nginx/toliak.ru/course-project/docs/$SUB_DIR/
 
   only:
