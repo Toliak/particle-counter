@@ -50,9 +50,7 @@ def get_artifact_path(name):
     return path
 
 
-def is_background(image: np.ndarray,
-                  max_gray: float,
-                  percent: float):
+def is_background(image: np.ndarray, max_gray, percent):
     """Является ли переданное изображение фоновым
     @param image: Исходное изображение
     @param max_gray: Предельное значение яркости фона
@@ -60,9 +58,10 @@ def is_background(image: np.ndarray,
     @return True, если является, иначе - False
     """
     useless_pixels = (image == 0).sum()
-    binary = image <= max_gray
-    percent = (binary.sum() - useless_pixels) / (binary.size - useless_pixels)
-    return percent >= percent
+    binary: np.ndarray = image <= max_gray
+
+    percent_result = (binary.sum() - useless_pixels) / (binary.size - useless_pixels)
+    return percent_result >= percent
 
 
 def label_peak_amount(image, min_gray, min_size):
