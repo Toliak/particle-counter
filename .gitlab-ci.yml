@@ -110,7 +110,7 @@ deploy docker:
   stage: deploy
 
   before_script:
-    - [[ ${CI_COMMIT_REF_SLUG} = master ]] \&\& TAG_NAME=latest || TAG_NAME=dev
+    - \[\[ ${CI_COMMIT_REF_SLUG} = master \]\] \&\& TAG_NAME=latest || TAG_NAME=dev
     - echo $TAG_NAME
 
   script:
