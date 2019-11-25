@@ -1,12 +1,16 @@
-.deploy_docs: &deploy_docs
+stages:
+  - collect
+  - deploy
+
+
+collect docs:
   image: nxpleuvenjenkins/doxygen
+  
+  stage: collect
 
   before_script:
     - apt-get update -y
     - apt-get install -y sshpass openssh-client
-
-deploy:docs:dev:
-  <<: *deploy_docs
 
   script:
     - doxygen Doxyfile
@@ -14,9 +18,13 @@ deploy:docs:dev:
   only:
     refs:
       - develop
+      - master
+
 
 .deploy_docker: &deploy_docker
   image: docker:18.09.7
+
+  stage: deploy
 
   variables:
     DOCKER_TLS_CERTDIR: "/certs"
@@ -37,7 +45,7 @@ deploy:docs:dev:
       - Pipfile
       - .gitlab-ci.yml
 
-deploy:docker:prod:
+docker (prod):
   <<: *deploy_docker
 
   variables:
@@ -47,7 +55,7 @@ deploy:docker:prod:
     refs:
       - master
 
-deploy:docker:dev:
+docker (dev):
   <<: *deploy_docker
 
   variables:
