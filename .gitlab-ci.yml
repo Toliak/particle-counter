@@ -44,6 +44,7 @@ build docs:
   stage: build
 
   before_script:
+    - HOME_DIR=$(pwd)
     - apt-get update -y
     - apt-get install -y flex bison texlive-font-utils cmake git
     - cd /tmp
@@ -57,9 +58,9 @@ build docs:
     - make install
 
   script:
-    - cd ~
+    - cd $HOME_DIR
     - pip3 install doxypypy
-    - doxygen Doxyfile
+    - ./scripts/doxygen.sh
 
   cache:
     key: ${CI_COMMIT_REF_SLUG}_docs
