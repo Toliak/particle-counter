@@ -1,8 +1,17 @@
 stages:
   - build
   - test
-#  - deploy
+  - deploy
 
+.deploy_docker: &deploy_docker
+  only:
+    changes:
+      - Dockerfile
+      - Pipfile
+      - .gitlab-ci.yml
+    refs:
+      - develop
+      - master
 
 .env_docker: &env_docker
   image: docker:18.09.7
@@ -15,6 +24,7 @@ stages:
 
 build docker:
   <<: *env_docker
+  <<: *deploy_docker
 
   stage: build
 
@@ -24,13 +34,8 @@ build docker:
     - docker save -o images/deploy_image.tar deploy_image
 
   only:
-    changes:
-      - Dockerfile
-      - Pipfile
-      - .gitlab-ci.yml
     refs:
-      - develop
-      - master
+      - *
 
   cache:
     key: ${CI_COMMIT_REF_SLUG}_docker
@@ -47,25 +52,79 @@ build docs:
   script:
     - doxygen Doxyfile
 
-  only:
-    refs:
-      - develop
-      - master
-
   cache:
     key: ${CI_COMMIT_REF_SLUG}_docs
     paths:
       - doxygen-build/
     policy: push
 
-tests:
+
+test and coverage:
   <<: *env_docker
 
   stage: test
 
+  before_script:
+    - docker load --input images/deploy_image.tar
+
+  script:
+    - docker run -t --rm -v $(pwd):/opt/builder/ -w /opt/builder/tests deploy_image ../scripts/tests.sh
+
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}_docker
+    paths:
+      - images/
+    policy: pull
+
+
+deploy docs:
+  image: debian:buster
+
+  stage: deploy
+
+  only:
+    refs:
+      - develop
+      - master
+
+  before_script:
+    - apt-get update -y
+    - apt-get install -y sshpass openssh-client
+    - [[ ${CI_COMMIT_REF_SLUG} = master ]] && SUB_DIR=latest || SUB_DIR=dev
+    - echo $SUB_DIR
+
+  script:
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+    - echo -e "Host ToliakRuVM\n\tHostname 127.0.0.1\n\tUser root" >> ~/.ssh/config
+    - echo -e "\tIdentityFile ~/.ssh/ToliakRuVM\n\tIdentitiesOnly no\n\n" >> ~/.ssh/config
+    - sshpass -p $CI_PASSWORD_VISITOR scp visitor@skeak.toliak.ru:~/.ssh/ToliakRuVM ~/.ssh/ToliakRuVM
+    - sshpass -p $CI_PASSWORD_VISITOR ssh -L 127.0.0.1:8022:ToliakRuVM:22 visitor@skeak.toliak.ru -f 'sleep 1000'
+    - cd doxygen-build/
+    - scp -r -P 8022 . ToliakRuVM:/usr/share/nginx/toliak.ru/course-project/docs/$SUB_DIR/
+
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}_docs
+    paths:
+      - doxygen-build/
+    policy: pull
+
+deploy docker:
+  <<: *env_docker
+  <<: *deploy_docker
+
+  stage: deploy
+
+  before_script:
+    - [[ ${CI_COMMIT_REF_SLUG} = master ]] && TAG_NAME=latest || TAG_NAME=dev
+    - echo $TAG_NAME
+
   script:
     - docker load --input images/deploy_image.tar
-    - docker run -t --rm -v $(pwd):/opt/builder/ -w /opt/builder/tests deploy_image pytest .
+    - docker tag deploy_image toliak/course-project-2019:$TAG_NAME
+    - docker login --username toliak -p $DOCKERHUB_KEY
+    - docker push toliak/course-project-2019:$TAG_NAME
 
   cache:
     key: ${CI_COMMIT_REF_SLUG}_docker

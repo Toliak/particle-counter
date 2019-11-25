@@ -7,3 +7,4 @@ data
 *build*
 artifacts
 .pytest_cache
+.coverage
