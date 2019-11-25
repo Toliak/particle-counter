@@ -1,4 +1,4 @@
-"""@package config_threshold
+"""@package demo.config.config_threshold
 Конфигурационный файл для порогового алгоритма"""
 
 ## Размер результирующего изображения

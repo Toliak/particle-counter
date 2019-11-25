@@ -1,4 +1,4 @@
-"""@package config_watershed
+"""@package demo.config.config_watershed
 Конфигурационный файл для алгоритма водоразделов"""
 
 ## Размер результирующего изображения

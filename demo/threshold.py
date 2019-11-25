@@ -1,4 +1,4 @@
-"""@package threshold
+"""@package demo.threshold
 Демонстрационный модуль для порогового алгоритма
 """
 import sys
@@ -10,8 +10,8 @@ from skimage.filters import threshold_isodata, threshold_mean, threshold_triangl
 
 import config.config_threshold as config
 
-sys.path.append('code')
-sys.path.append('../code')
+sys.path.append('core')
+sys.path.append('../core')
 
 
 def evaluate(image_path=None):

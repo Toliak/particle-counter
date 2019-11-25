@@ -1,5 +1,6 @@
-"""@package config_spectral_clustering
-Конфигурационный файл для алгоритма водоразделов"""
+"""@package demo.config.config_spectral_clustering
+Конфигурационный файл для алгоритма водоразделов
+"""
 
 ## Размер результирующего изображения
 FIGSIZE = (15, 12)

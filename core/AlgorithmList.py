@@ -1,4 +1,4 @@
-"""@package AlgorithmList
+"""@package core.AlgorithmList
 Родительский класс для реализаций алгоритмов сегментации (со списком изображений)
 """
 

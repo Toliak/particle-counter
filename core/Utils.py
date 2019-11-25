@@ -1,4 +1,4 @@
-"""@package Utils
+"""@package core.Utils
 Утилитарный функции
 """
 import os

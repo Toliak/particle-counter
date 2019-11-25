@@ -1,4 +1,4 @@
-"""@package watershed
+"""@package demo.watershed
 Демонстрационный модуль для алгоритма водоразделов
 """
 import sys
@@ -9,8 +9,8 @@ import matplotlib.pyplot as plot
 
 import config.config_watershed as config
 
-sys.path.append('code')
-sys.path.append('../code')
+sys.path.append('core')
+sys.path.append('../core')
 
 
 def save_iteration(index, subplot_rows, subplot_cols, watershed, result_image, title):
@@ -79,10 +79,10 @@ if __name__ == '__main__':
     from Algorithm import Watershed
     from Utils import get_artifact_path
 
-    ## @copydoc Algorithm.Watershed::MINIMAL_GRAY
+    ## @copydoc core.Algorithm.Watershed::MINIMAL_GRAY
     Watershed.MINIMAL_GRAY = config.WATERSHED_MINIMAL_GRAY
 
-    ## @copydoc Algorithm.Watershed::MINIMAL_GRAY_MARKER
+    ## @copydoc core.Algorithm.Watershed::MINIMAL_GRAY_MARKER
     Watershed.MINIMAL_GRAY_MARKER = config.WATERSHED_MINIMAL_GRAY_MARKER
 
     if len(sys.argv) >= 2:

@@ -1,4 +1,4 @@
-"""@package Dataset
+"""@package core.Dataset
 Содержит изображения частиц
 """
 

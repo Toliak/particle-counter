@@ -1,4 +1,4 @@
-"""@package spectral_clustering
+"""@package demo.spectral_clustering
 Демонстрационный модуль для алгоритма спектральной кластеризации
 """
 import sys
@@ -10,8 +10,8 @@ import matplotlib.pyplot as plot
 
 import config.config_spectral_clustering as config
 
-sys.path.append('code')
-sys.path.append('../code')
+sys.path.append('core')
+sys.path.append('../core')
 
 
 def zero_iteration(clustering):

@@ -1,4 +1,4 @@
-"""@package Algorithm
+"""@package core.Algorithm
 Родительский класс для реализаций алгоритмов сегментации
 """
 from scipy.ndimage import distance_transform_edt
