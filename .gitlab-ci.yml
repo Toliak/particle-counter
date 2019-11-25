@@ -1,30 +1,13 @@
 stages:
-  - collect
-  - deploy
+  - build
+  - test
+#  - deploy
 
 
-collect docs:
-  image: nxpleuvenjenkins/doxygen
-  
-  stage: collect
-
-  before_script:
-    - apt-get update -y
-    - apt-get install -y sshpass openssh-client
-
-  script:
-    - doxygen Doxyfile
-
-  only:
-    refs:
-      - develop
-      - master
-
-
-.deploy_docker: &deploy_docker
+.env_docker: &env_docker
   image: docker:18.09.7
 
-  stage: deploy
+  stage: build
 
   variables:
     DOCKER_TLS_CERTDIR: "/certs"
@@ -32,35 +15,60 @@ collect docs:
   services:
     - docker:18.09.7-dind
 
-  before_script:
-    - docker build . --tag toliak/course-project-2019:$TAG_NAME
-    - docker login --username toliak -p $DOCKERHUB_KEY
+build docker:
+  <<: *env_docker
 
   script:
-    - docker push toliak/course-project-2019:$TAG_NAME
+    - docker build . --tag deploy_image
+    - mkdir -p /var/deploy/images
+    - docker save -o /var/deploy/images/deploy_image.tar deploy_image
 
   only:
     changes:
       - Dockerfile
       - Pipfile
       - .gitlab-ci.yml
-
-docker (prod):
-  <<: *deploy_docker
-
-  variables:
-    TAG_NAME: "master"
-
-  only:
     refs:
+      - develop
       - master
 
-docker (dev):
-  <<: *deploy_docker
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - /var/deploy/images/
+    policy: pull
 
-  variables:
-    TAG_NAME: "dev"
+
+build docs:
+  image: nxpleuvenjenkins/doxygen
+
+  stage: build
+
+  script:
+    - doxygen Doxyfile
+    - mkdir -p /var/deploy/doxygen
+    - cp -rv doxygen-build/ /var/deploy/doxygen/
 
   only:
     refs:
       - develop
+      - master
+
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - /var/deploy/doxygen/
+    policy: pull
+
+tests:
+  <<: *env_docker
+
+  script:
+    - docker load --input /var/deploy/images/deploy_image.tar
+    - docker run -t --rm -v $(pwd):/opt/builder/ -w /opt/builder/tests deploy_image pytest .
+
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - /var/deploy/images/
+    policy: push
