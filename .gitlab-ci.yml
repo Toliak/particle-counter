@@ -7,7 +7,7 @@ stages:
 .env_docker: &env_docker
   image: docker:18.09.7
 
-  stage: build
+
 
   variables:
     DOCKER_TLS_CERTDIR: "/certs"
@@ -17,6 +17,8 @@ stages:
 
 build docker:
   <<: *env_docker
+
+  stage: build
 
   script:
     - docker build . --tag deploy_image
@@ -36,7 +38,7 @@ build docker:
     key: ${CI_COMMIT_REF_SLUG}
     paths:
       - /var/deploy/images/
-    policy: pull
+    policy: push
 
 
 build docs:
@@ -58,10 +60,12 @@ build docs:
     key: ${CI_COMMIT_REF_SLUG}
     paths:
       - /var/deploy/doxygen/
-    policy: pull
+    policy: push
 
 tests:
   <<: *env_docker
+
+  stage: test
 
   script:
     - docker load --input /var/deploy/images/deploy_image.tar
@@ -71,4 +75,4 @@ tests:
     key: ${CI_COMMIT_REF_SLUG}
     paths:
       - /var/deploy/images/
-    policy: push
+    policy: pull
