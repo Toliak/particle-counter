@@ -58,6 +58,9 @@ class Threshold(Algorithm):
     particle_amount = None
 
     def __init__(self, image):
+        """
+        @copydoc Algorithm::\_\_init\_\_()
+        """
         super().__init__(image)
 
     def apply_threshold(self, function):
@@ -88,6 +91,9 @@ class Watershed(Algorithm):
     particle_amount = None
 
     def __init__(self, image):
+        """
+        @copydoc Algorithm::\_\_init\_\_()
+        """
         super().__init__(image)
 
     def apply(self):

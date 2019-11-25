@@ -50,13 +50,15 @@ def get_artifact_path(name):
     return path
 
 
-def is_background(image: np.ndarray, max_gray, percent):
+def is_background(image, max_gray, percent):
     """Является ли переданное изображение фоновым
     @param image: Исходное изображение
     @param max_gray: Предельное значение яркости фона
     @param percent: Минимальный процент пикселей фона
     @return True, если является, иначе - False
     """
+    image: np.ndarray = image       # Remove pycharm warning
+
     useless_pixels = (image == 0).sum()
     binary: np.ndarray = image <= max_gray
 

@@ -78,10 +78,10 @@ if __name__ == '__main__':
     from core.Algorithm import Watershed
     from core.Utils import get_artifact_path
 
-    ## @copydoc core.Algorithm.Watershed::MINIMAL_GRAY
+    ## Минимальная яркость для построения карты расстояний
     Watershed.MINIMAL_GRAY = config.WATERSHED_MINIMAL_GRAY
 
-    ## @copydoc core.Algorithm.Watershed::MINIMAL_GRAY_MARKER
+    ## Минимальная яркость для маркировки
     Watershed.MINIMAL_GRAY_MARKER = config.WATERSHED_MINIMAL_GRAY_MARKER
 
     if len(sys.argv) >= 2:
