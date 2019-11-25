@@ -4,6 +4,7 @@
 import os
 
 import matplotlib.pyplot as plot
+import numpy as np
 from scipy.ndimage import label
 from skimage.color import rgb2gray
 
@@ -49,34 +50,34 @@ def get_artifact_path(name):
     return path
 
 
-def is_background(image):
+def is_background(image: np.ndarray,
+                  max_gray: float,
+                  percent: float):
     """Является ли переданное изображение фоновым
     @param image: Исходное изображение
+    @param max_gray: Предельное значение яркости фона
+    @param percent: Минимальный процент пикселей фона
     @return True, если является, иначе - False
     """
-    PERCENT = 0.85
-    MAX_GRAY = 0.2
-
     useless_pixels = (image == 0).sum()
-    binary = image <= MAX_GRAY
+    binary = image <= max_gray
     percent = (binary.sum() - useless_pixels) / (binary.size - useless_pixels)
-    return percent >= PERCENT
+    return percent >= percent
 
 
-def label_peak_amount(image):
+def label_peak_amount(image, min_gray, min_size):
     """Тривиальный подсчет количества частиц на изображении
     @param image: Исходное изображение
+    @param min_gray: Минимальная яркость для учета частицы
+    @param min_size: Минимальный размер области частицы
     @return Изображение с пронумерованными частицами и количество частиц
     """
-    MIN_GRAY = 0.52
-    MIN_SIZE = 35
-
-    binary = image > MIN_GRAY
+    binary = image > min_gray
     result, amount = label(binary)
 
     for i in range(1, amount + 1):
         label_only = result == i
-        if label_only.sum() > MIN_SIZE:
+        if label_only.sum() > min_size:
             continue
 
         result[label_only == 1] = 0

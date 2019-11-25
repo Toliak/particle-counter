@@ -37,7 +37,7 @@ def result_processing(result, row_amount, final_particles):
     remove_indexes = []
 
     for j, img in enumerate(result):
-        is_bg = is_background(img)
+        is_bg = is_background(img, config.BACKGROUND_MAX_GRAY, config.BACKGROUND_PERCENT)
         if is_bg:
             remove_indexes.append(j)
 
@@ -46,7 +46,7 @@ def result_processing(result, row_amount, final_particles):
         plot.title(f'image {j}\nbg: {is_bg}')
 
         if not is_bg:
-            labels, amount = label_peak_amount(img)
+            labels, amount = label_peak_amount(img, config.LABEL_PEAK_MIN_GRAY, config.LABEL_PEAK_MIN_SIZE)
 
             plot.subplot(row_amount, 5, j * 2 + 2)
             plot.imshow(labels)
