@@ -6,3 +6,4 @@ data
 .ipynb_checkpoints
 *build*
 artifacts
+.pytest_cache
