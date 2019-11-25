@@ -7,8 +7,6 @@ stages:
 .env_docker: &env_docker
   image: docker:18.09.7
 
-
-
   variables:
     DOCKER_TLS_CERTDIR: "/certs"
 
@@ -22,8 +20,8 @@ build docker:
 
   script:
     - docker build . --tag deploy_image
-    - mkdir -p /var/deploy/images
-    - docker save -o /var/deploy/images/deploy_image.tar deploy_image
+    - mkdir -p images/
+    - docker save -o images/deploy_image.tar deploy_image
 
   only:
     changes:
@@ -37,7 +35,7 @@ build docker:
   cache:
     key: ${CI_COMMIT_REF_SLUG}
     paths:
-      - /var/deploy/images/
+      - images/
     policy: push
 
 
@@ -48,8 +46,6 @@ build docs:
 
   script:
     - doxygen Doxyfile
-    - mkdir -p /var/deploy/doxygen
-    - cp -rv doxygen-build/ /var/deploy/doxygen/
 
   only:
     refs:
@@ -59,7 +55,7 @@ build docs:
   cache:
     key: ${CI_COMMIT_REF_SLUG}
     paths:
-      - /var/deploy/doxygen/
+      - doxygen-build/
     policy: push
 
 tests:
@@ -68,11 +64,11 @@ tests:
   stage: test
 
   script:
-    - docker load --input /var/deploy/images/deploy_image.tar
+    - docker load --input images/deploy_image.tar
     - docker run -t --rm -v $(pwd):/opt/builder/ -w /opt/builder/tests deploy_image pytest .
 
   cache:
     key: ${CI_COMMIT_REF_SLUG}
     paths:
-      - /var/deploy/images/
+      - images/
     policy: pull
