@@ -78,7 +78,7 @@ deploy docs:
   before_script:
     - apt-get update -y
     - apt-get install -y sshpass openssh-client
-    - [[ ${CI_COMMIT_REF_SLUG} = master ]] \&\& SUB_DIR=latest || SUB_DIR=dev
+    - \[\[ ${CI_COMMIT_REF_SLUG} = master \]\] \&\& SUB_DIR=latest || SUB_DIR=dev
     - echo $SUB_DIR
 
   script:
