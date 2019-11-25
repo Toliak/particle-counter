@@ -9,9 +9,10 @@ import imageio
 import matplotlib.pyplot as plot
 
 import config.config_spectral_clustering as config
-from ImageChecker import is_atomic, is_background, label_peak_amount
 
 sys.path.append('code')
+sys.path.append('../code')
+
 
 def zero_iteration(clustering):
     """Действия на 1й итерации
@@ -42,8 +43,7 @@ def result_processing(result, row_amount, final_particles):
 
         plot.subplot(row_amount, 5, j * 2 + 1)
         plot.imshow(img)
-        plot.title(f'image {j}\nbg: {is_bg}'
-                   f'\natomic: {is_atomic(img): <07.6f}')
+        plot.title(f'image {j}\nbg: {is_bg}')
 
         if not is_bg:
             labels, amount = label_peak_amount(img)
@@ -117,7 +117,7 @@ def evaluate(image_path=None):
 
 
 if __name__ == '__main__':
-    from Utils import get_artifact_path
+    from Utils import get_artifact_path, is_background, label_peak_amount
     import Dataset
     from AlgorithmList import SpectralClustering
 

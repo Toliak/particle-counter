@@ -11,6 +11,7 @@ from skimage.filters import threshold_isodata, threshold_mean, threshold_triangl
 import config.config_threshold as config
 
 sys.path.append('code')
+sys.path.append('../code')
 
 
 def evaluate(image_path=None):
@@ -69,7 +70,7 @@ if __name__ == '__main__':
     import Dataset
     from Algorithm import Threshold
 
-    if len(sys.argv) >= 2:
+    if len(sys.argv) >= 2 and len(sys.argv[1]) > 0:
         evaluate(sys.argv[1])
     else:
         evaluate()

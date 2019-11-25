@@ -10,6 +10,7 @@ import matplotlib.pyplot as plot
 import config.config_watershed as config
 
 sys.path.append('code')
+sys.path.append('../code')
 
 
 def save_iteration(index, subplot_rows, subplot_cols, watershed, result_image, title):
