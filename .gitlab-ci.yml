@@ -9,9 +9,6 @@ stages:
       - Dockerfile
       - Pipfile
       - .gitlab-ci.yml
-    refs:
-      - develop
-      - master
 
 .env_docker: &env_docker
   image: docker:18.09.7
@@ -32,10 +29,6 @@ build docker:
     - docker build . --tag deploy_image
     - mkdir -p images/
     - docker save -o images/deploy_image.tar deploy_image
-
-  only:
-    refs:
-      - *
 
   cache:
     key: ${CI_COMMIT_REF_SLUG}_docker
@@ -82,11 +75,6 @@ deploy docs:
 
   stage: deploy
 
-  only:
-    refs:
-      - develop
-      - master
-
   before_script:
     - apt-get update -y
     - apt-get install -y sshpass openssh-client
@@ -103,6 +91,11 @@ deploy docs:
     - sshpass -p $CI_PASSWORD_VISITOR ssh -L 127.0.0.1:8022:ToliakRuVM:22 visitor@skeak.toliak.ru -f 'sleep 1000'
     - cd doxygen-build/
     - scp -r -P 8022 . ToliakRuVM:/usr/share/nginx/toliak.ru/course-project/docs/$SUB_DIR/
+
+  only:
+    refs:
+      - develop
+      - master
 
   cache:
     key: ${CI_COMMIT_REF_SLUG}_docs
@@ -125,6 +118,11 @@ deploy docker:
     - docker tag deploy_image toliak/course-project-2019:$TAG_NAME
     - docker login --username toliak -p $DOCKERHUB_KEY
     - docker push toliak/course-project-2019:$TAG_NAME
+
+  only:
+    refs:
+      - develop
+      - master
 
   cache:
     key: ${CI_COMMIT_REF_SLUG}_docker
