@@ -24,11 +24,6 @@ build docker:
     - mkdir -p images/
     - docker save -o images/deploy_image.tar deploy_image
 
-  only:
-    changes:
-      - Dockerfile
-      - Pipfile
-
   cache:
     key: ${CI_COMMIT_REF_SLUG}_docker
     paths:
@@ -136,6 +131,7 @@ deploy docker:
     changes:
       - Dockerfile
       - Pipfile
+      - .gitlab-ci.yml
     refs:
       - develop
       - master
