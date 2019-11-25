@@ -6,16 +6,13 @@ verify_ssl = true
 [dev-packages]
 
 [packages]
-jupyter = "*"
+matplotlib = "*"
+numpy = "*"
+imageio = "*"
 sklearn = "*"
 scikit-image = "*"
-numpy = "*"
-matplotlib = "*"
-imageio = "*"
 pyamg = "*"
-opencv-python = "*"
-doxypy = "*"
-doxypypy = "*"
+pytest = "*"
 
 [requires]
 python_version = "3.7"
