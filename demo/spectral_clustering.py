@@ -1,5 +1,5 @@
 """@package demo.spectral_clustering
-Демонстрационный модуль для алгоритма спектральной кластеризации
+@brief Демонстрационный модуль для алгоритма спектральной кластеризации
 """
 import sys
 from datetime import datetime

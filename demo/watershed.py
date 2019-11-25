@@ -1,5 +1,5 @@
 """@package demo.watershed
-Демонстрационный модуль для алгоритма водоразделов
+@brief Демонстрационный модуль для алгоритма водоразделов
 """
 import sys
 from datetime import datetime

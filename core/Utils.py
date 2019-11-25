@@ -1,5 +1,5 @@
 """@package core.Utils
-Утилитарный функции
+@brief Утилитарные функции
 """
 import os
 

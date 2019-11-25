@@ -1,5 +1,5 @@
 """@package tests.test_threshold
-Тесты для порогового алгоритма
+@brief Тесты для порогового алгоритма
 """
 import sys
 

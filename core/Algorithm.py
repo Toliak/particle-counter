@@ -1,5 +1,5 @@
 """@package core.Algorithm
-Родительский класс для реализаций алгоритмов сегментации
+@brief Алгоритмы сегментации, работающие с одним изображением
 """
 from scipy.ndimage import distance_transform_edt
 from scipy.ndimage import label

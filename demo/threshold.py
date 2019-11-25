@@ -1,5 +1,5 @@
 """@package demo.threshold
-Демонстрационный модуль для порогового алгоритма
+@brief Демонстрационный модуль для порогового алгоритма
 """
 import sys
 from datetime import datetime
