@@ -31,27 +31,11 @@ build docker:
     policy: push
 
 build docs:
-  image: python:3.7.4-buster
+  image: toliak/doxygen-doxypypy
 
   stage: build
-
-  before_script:
-    - HOME_DIR=$(pwd)
-    - apt-get update -y
-    - apt-get install -y flex bison texlive-font-utils cmake git
-    - cd /tmp
-    - git clone https://github.com/doxygen/doxygen.git
-    - cd doxygen
-    - git checkout Release_1_8_16
-    - mkdir build
-    - cd build
-    - cmake -G "Unix Makefiles" ..
-    - make -j 4
-    - make install
-
+  
   script:
-    - cd $HOME_DIR
-    - pip3 install doxypypy
     - ./scripts/doxygen.sh
 
   cache:
