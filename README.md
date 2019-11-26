@@ -27,5 +27,6 @@ python3 demo/$APP_NAME.py
 
 ```bash
 APP_NAME=threshold|watershed|spectral_clustering
-./scripts/docker.sh python demo/$APP_NAME.py
+BRANCH=latest|dev
+./scripts/docker.sh $BRANCH python $APP_NAME.py
 ```
