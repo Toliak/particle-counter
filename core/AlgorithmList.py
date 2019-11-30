@@ -44,7 +44,7 @@ class AlgorithmList:
         @param level: Радиус диска (ядра)
         """
         for i, image in enumerate(self.image_list):
-            self.image_list[i] = gaussian_filter(image, sigma=2)
+            self.image_list[i] = gaussian_filter(image, sigma=level)
 
     @staticmethod
     def crop_by_mask(image, mask):

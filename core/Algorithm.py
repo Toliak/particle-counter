@@ -39,7 +39,7 @@ class Algorithm:
         """Медианный алгоритм для уменьшения шумов
         @param level: Радиус диска (ядра)
         """
-        self.image = rank.median(self.image, disk(2))
+        self.image = rank.median(self.image, disk(level))
 
     def apply(self, *args, **kwargs):
         """Реализация алгоритма
