@@ -8,8 +8,6 @@ from math import ceil
 import imageio
 import matplotlib.pyplot as plot
 
-import config.config_spectral_clustering as global_config
-
 sys.path.append('..')
 
 
@@ -129,6 +127,8 @@ def evaluate(config, image_path=None):
 
 
 if __name__ == '__main__':
+    import demo.config.config_spectral_clustering as global_config
+
     assert len(global_config.GRAPH_BETA) >= global_config.ITERATIONS
     assert len(global_config.GRAPH_EPS) >= global_config.ITERATIONS
     assert len(global_config.N_CLUSTERS) >= global_config.ITERATIONS
