@@ -8,7 +8,7 @@ from math import ceil
 import imageio
 import matplotlib.pyplot as plot
 
-import config.config_spectral_clustering as config
+import config.config_spectral_clustering as global_config
 
 sys.path.append('..')
 
@@ -17,6 +17,8 @@ def zero_iteration(clustering):
     """Действия на 1й итерации
     @param clustering: Объект обертки алгоритма кластеризации
     """
+    from core.Utils import get_artifact_path
+
     plot.figure(figsize=(8, 8))
     plot.axis('off')
     plot.imshow(clustering.image_list[0], cmap='viridis')
@@ -26,13 +28,16 @@ def zero_iteration(clustering):
                  bbox_inches='tight')
 
 
-def result_processing(result, row_amount, final_particles):
+def result_processing(config, result, row_amount, final_particles):
     """Обработка промежуточного результата
+    @param config: Конфигурация
     @param result: Список кластеризованных изображений
     @param row_amount: Количество строк в визуализации
     @param final_particles: Список с результирующими изображениями частиц
     @return Список отмеченных индексов на удаление
     """
+    from core.Utils import is_background, label_peak_amount
+
     remove_indexes = []
 
     for j, img in enumerate(result):
@@ -60,10 +65,15 @@ def result_processing(result, row_amount, final_particles):
     return remove_indexes
 
 
-def evaluate(image_path=None):
+def evaluate(config, image_path=None):
     """Демонстрация алгоритма спектральной кластеризации
+    @param config: Конфигурация
     @param image_path: Пусть к изображению. Если None, то используется стандартное изображение
     """
+    from core import Dataset
+    from core.Utils import get_artifact_path
+    from core.AlgorithmList import SpectralClustering
+
     if image_path:
         original_image = dict(image=imageio.imread(image_path),
                               title=image_path)
@@ -92,7 +102,8 @@ def evaluate(image_path=None):
         row_amount = ceil(len(result) / 5) * 2  # Количество строк в визуализации
         plot.figure(figsize=config.RESULT_OUTPUT_SIZE[i])
 
-        remove_indexes = result_processing(result=result,
+        remove_indexes = result_processing(config=config,
+                                           result=result,
                                            row_amount=row_amount,
                                            final_particles=final_particles)
         plot.savefig(get_artifact_path(f'clustering_{i}_{datetime.now().timestamp()}'),
@@ -114,20 +125,18 @@ def evaluate(image_path=None):
                  bbox_inches='tight')
     print(f'Result amount: {len(final_particles)}')
 
+    return len(final_particles)
+
 
 if __name__ == '__main__':
-    from core.Utils import get_artifact_path, is_background, label_peak_amount
-    from core import Dataset
-    from core.AlgorithmList import SpectralClustering
-
-    assert len(config.GRAPH_BETA) >= config.ITERATIONS
-    assert len(config.GRAPH_EPS) >= config.ITERATIONS
-    assert len(config.N_CLUSTERS) >= config.ITERATIONS
-    assert len(config.N_INIT) >= config.ITERATIONS
-    assert len(config.LABELS) >= config.ITERATIONS
-    assert len(config.RESULT_OUTPUT_SIZE) >= config.ITERATIONS
+    assert len(global_config.GRAPH_BETA) >= global_config.ITERATIONS
+    assert len(global_config.GRAPH_EPS) >= global_config.ITERATIONS
+    assert len(global_config.N_CLUSTERS) >= global_config.ITERATIONS
+    assert len(global_config.N_INIT) >= global_config.ITERATIONS
+    assert len(global_config.LABELS) >= global_config.ITERATIONS
+    assert len(global_config.RESULT_OUTPUT_SIZE) >= global_config.ITERATIONS
 
     if len(sys.argv) >= 2:
-        evaluate(sys.argv[1])
+        evaluate(global_config, sys.argv[1])
     else:
-        evaluate()
+        evaluate(global_config)

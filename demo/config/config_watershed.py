@@ -16,4 +16,4 @@ SUBPLOT_ADJUST = dict(top=0.92,
 WATERSHED_MINIMAL_GRAY = 60
 
 ## Минимальная яркость для маркировки при выполнении алгоритма водоразделов
-WATERSHED_MINIMAL_GRAY_MARKER = 150
+WATERSHED_MINIMAL_GRAY_MARKER = 140

@@ -57,7 +57,9 @@ def evaluate(image_path=None):
         image, title = data['image'], data['title']
 
         # Выполнение алгоритма водораздела
-        watershed = Watershed(image)
+        watershed = Watershed(image,
+                              config.WATERSHED_MINIMAL_GRAY,
+                              config.WATERSHED_MINIMAL_GRAY_MARKER)
         result_image = watershed.apply()
 
         save_iteration(index=i,
@@ -77,12 +79,6 @@ if __name__ == '__main__':
     from core import Dataset
     from core.Algorithm import Watershed
     from core.Utils import get_artifact_path
-
-    ## Минимальная яркость для построения карты расстояний
-    Watershed.MINIMAL_GRAY = config.WATERSHED_MINIMAL_GRAY
-
-    ## Минимальная яркость для маркировки
-    Watershed.MINIMAL_GRAY_MARKER = config.WATERSHED_MINIMAL_GRAY_MARKER
 
     if len(sys.argv) >= 2:
         evaluate(sys.argv[1])
