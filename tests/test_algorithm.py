@@ -1,9 +1,12 @@
 """@package tests.test_algorithm
 @brief Тесты для родительского класса для алгоритмов
 """
+import sys
 
 import numpy as np
 import pytest
+
+sys.path.append('..')
 
 
 @pytest.fixture
