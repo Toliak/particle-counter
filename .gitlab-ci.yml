@@ -19,6 +19,10 @@ build docker:
 
   stage: build
 
+  before_script:
+    - docker pull toliak/course-project-2019:latest || true
+    - docker pull toliak/course-project-2019:dev || true
+
   script:
     - docker build . --tag deploy_image
     - mkdir -p images/
