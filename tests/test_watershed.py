@@ -1,4 +1,4 @@
-"""@package tests.watershed
+"""@package tests.test_watershed
 @brief Тесты для алгоритма водоразделов
 """
 import sys

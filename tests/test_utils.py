@@ -1,4 +1,4 @@
-"""@package tests.utils
+"""@package tests.test_utils
 @brief Тесты для утилитарных функций
 """
 import sys
