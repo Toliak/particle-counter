@@ -54,7 +54,7 @@ def evaluate(image_path=None):
             plot.subplot(subplot_rows, subplot_cols, subplot_index)
             plot.imshow(result_image)
             plot.axis('off')
-            plot.title(f'Result {title} {f.__name__}\n'
+            plot.title(f'Result {f.__name__}\n'
                        f'Amount: {threshold.particle_amount}\n'
                        f'Threshold value: {threshold.threshold_value: 08.4f}')
 

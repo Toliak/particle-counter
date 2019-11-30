@@ -3,7 +3,7 @@
 """
 from scipy.ndimage import distance_transform_edt
 from scipy.ndimage import label
-from skimage import color
+from skimage import color, img_as_ubyte
 from skimage.filters import rank
 from skimage.morphology import disk, watershed
 
@@ -39,7 +39,7 @@ class Algorithm:
         """Медианный алгоритм для уменьшения шумов
         @param level: Радиус диска (ядра)
         """
-        self.image = rank.median(self.image, disk(level))
+        self.image = rank.median(img_as_ubyte(self.image), disk(level))
 
     def apply(self, *args, **kwargs):
         """Реализация алгоритма
