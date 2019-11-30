@@ -72,7 +72,7 @@ def test_threshold_demo_image_threshold(name, function, expected_amount, epsilon
 @param epsilon: Отрезок неопределенности
     """
     from core import Dataset
-    from Algorithm import Threshold
+    from core.Algorithm import Threshold
 
     image = Dataset.load_by_path(name)
 

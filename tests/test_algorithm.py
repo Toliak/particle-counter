@@ -34,7 +34,7 @@ def algorithm(image):
     """Фикстура демонстрационного изображения
     @return Демонстрационное изображение
     """
-    from Algorithm import Algorithm
+    from core.Algorithm import Algorithm
 
     return Algorithm(image)
 
