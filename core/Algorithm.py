@@ -82,29 +82,34 @@ class Watershed(Algorithm):
     """
 
     ## Минимальная яркость для построения карты расстояний
-    MINIMAL_GRAY = 60
+    minimal_gray = None
 
     ## Минимальная яркость для маркировки
-    MINIMAL_GRAY_MARKER = 150
+    minimal_gray_marker = None
 
     ## Количество частиц
     particle_amount = None
 
-    def __init__(self, image):
+    def __init__(self, image, minimal_gray=60, minimal_gray_marker=150):
         """
         @copydoc Algorithm::\_\_init\_\_()
+        @param minimal_gray: Минимальная яркость для построения карты расстояний
+        @param minimal_gray_marker: Минимальная яркость для маркировки
         """
         super().__init__(image)
+
+        self.minimal_gray = minimal_gray
+        self.minimal_gray_marker = minimal_gray_marker
 
     def apply(self):
         """Реализация алгоритма водоразделов
         @return Результирующее изображение
         """
 
-        distance = distance_transform_edt(self.image > self.MINIMAL_GRAY)
-        markers, self.particle_amount = label(self.image > self.MINIMAL_GRAY_MARKER)
+        distance = distance_transform_edt(self.image > self.minimal_gray)
+        markers, self.particle_amount = label(self.image > self.minimal_gray_marker)
         watershed_result = watershed(-distance,
                                      markers,
-                                     mask=self.image > self.MINIMAL_GRAY)
+                                     mask=self.image > self.minimal_gray)
 
         return watershed_result

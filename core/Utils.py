@@ -3,41 +3,12 @@
 """
 import os
 
-import matplotlib.pyplot as plot
 import numpy as np
 from scipy.ndimage import label
-from skimage.color import rgb2gray
-
-
-def visualize(image, label='', cmap='viridis', figsize=(8, 8)):
-    """Простая визуализация изображения
-    @param image: Изображение
-    @param label: Заголовок
-    @param cmap: Цветовая гамма
-    @param figsize: Размер результирующего изображения
-    @return Визуализированное изображение
-    """
-    plot.figure(figsize=figsize)
-    plot.axis('off')
-    plot.imshow(image, cmap=cmap)
-    plot.title(label)
-
-    return plot.show()
-
-
-def image_to_grayscale(image):
-    """Преобразование 3-х канального изображение в 1-канальный с диапазоном серого [0, 255]
-    @param image: Изображение
-    @return Преобразованное изображения
-    """
-    result = rgb2gray(image)
-    result *= (255.0 / result.max())  # rescale
-
-    return result
 
 
 def get_artifact_path(name):
-    """Получение пути для сохранения артефакта. Создание
+    """Получение пути для сохранения артефакта. Side-эффект: Создание директории
     @param name: Название артефакта
     @return Путь для сохранения
     """
@@ -57,13 +28,13 @@ def is_background(image, max_gray, percent):
     @param percent: Минимальный процент пикселей фона
     @return True, если является, иначе - False
     """
-    image: np.ndarray = image       # Remove pycharm warning
+    image: np.ndarray = image  # Remove pycharm warning
 
     useless_pixels = (image == 0).sum()
     binary: np.ndarray = image <= max_gray
 
     percent_result = (binary.sum() - useless_pixels) / (binary.size - useless_pixels)
-    return percent_result >= percent
+    return bool(percent_result >= percent)
 
 
 def label_peak_amount(image, min_gray, min_size):
@@ -73,14 +44,15 @@ def label_peak_amount(image, min_gray, min_size):
     @param min_size: Минимальный размер области частицы
     @return Изображение с пронумерованными частицами и количество частиц
     """
-    binary = image > min_gray
+    binary = image >= min_gray
     result, amount = label(binary)
 
     for i in range(1, amount + 1):
         label_only = result == i
-        if label_only.sum() > min_size:
+        if label_only.sum() >= min_size:
             continue
 
         result[label_only == 1] = 0
+        amount -= 1
 
     return result, amount
