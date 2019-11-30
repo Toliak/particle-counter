@@ -48,7 +48,7 @@ def evaluate(image_path=None):
         plot.title(f'Grayscale {title}')
 
         for j, f in enumerate(functions):
-            result_image = threshold.apply_threshold(f)
+            result_image = threshold.apply(f)
 
             subplot_index = i * (len(functions) + 1) + 2 + j
             plot.subplot(subplot_rows, subplot_cols, subplot_index)

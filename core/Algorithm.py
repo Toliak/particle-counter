@@ -63,7 +63,7 @@ class Threshold(Algorithm):
         """
         super().__init__(image)
 
-    def apply_threshold(self, function):
+    def apply(self, function):
         """Реализация порогового алгоритма
         @param function: Функция определения порогового значения
         @return Результирующее изображение
