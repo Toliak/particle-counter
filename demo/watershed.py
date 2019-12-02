@@ -7,8 +7,6 @@ from datetime import datetime
 import imageio
 import matplotlib.pyplot as plot
 
-import config.config_watershed as config
-
 sys.path.append('..')
 
 
@@ -79,6 +77,7 @@ if __name__ == '__main__':
     from core import Dataset
     from core.Algorithm import Watershed
     from core.Utils import get_artifact_path
+    import demo.config.config_watershed as config
 
     if len(sys.argv) >= 2:
         evaluate(sys.argv[1])

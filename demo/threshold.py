@@ -8,8 +8,6 @@ import imageio
 import matplotlib.pyplot as plot
 from skimage.filters import threshold_isodata, threshold_mean, threshold_triangle, threshold_otsu
 
-import config.config_threshold as config
-
 sys.path.append('..')
 
 
@@ -68,6 +66,7 @@ if __name__ == '__main__':
     from core.Utils import get_artifact_path
     from core import Dataset
     from core.Algorithm import Threshold
+    import demo.config.config_threshold as config
 
     if len(sys.argv) >= 2 and len(sys.argv[1]) > 0:
         evaluate(sys.argv[1])
