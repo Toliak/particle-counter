@@ -116,7 +116,7 @@ class SpectralClustering(AlgorithmList):
         return result
 
     def apply(self, **kwargs):
-        """Максимально возможное кадрирование изображения после наложения маски
+        """Реализация алгоритма спектральной кластеризации
 
 Именные параметры передаются в
 <a href="https://scikit-learn.org/stable/modules/generated/sklearn.cluster.spectral_clustering.html">

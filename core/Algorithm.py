@@ -54,9 +54,6 @@ class Threshold(Algorithm):
     ## Пороговое значение
     threshold_value = None
 
-    ## Количество частиц
-    particle_amount = None
-
     def __init__(self, image):
         """
         @copydoc Algorithm::\_\_init\_\_()
@@ -87,14 +84,11 @@ class Watershed(Algorithm):
     ## Минимальная яркость для маркировки
     minimal_gray_marker = None
 
-    ## Количество частиц
-    particle_amount = None
-
     def __init__(self, image, minimal_gray=60, minimal_gray_marker=150):
         """
         @copydoc Algorithm::\_\_init\_\_()
-        @param minimal_gray: Минимальная яркость для построения карты расстояний
-        @param minimal_gray_marker: Минимальная яркость для маркировки
+        @param minimal_gray: Минимальная яркость для построения карты расстояний [0, 255]
+        @param minimal_gray_marker: Минимальная яркость для маркировки [0, 255]
         """
         super().__init__(image)
 
@@ -108,6 +102,7 @@ class Watershed(Algorithm):
 
         distance = distance_transform_edt(self.image > self.minimal_gray)
         markers, self.particle_amount = label(self.image > self.minimal_gray_marker)
+
         watershed_result = watershed(-distance,
                                      markers,
                                      mask=self.image > self.minimal_gray)

@@ -3,7 +3,7 @@
 """
 
 import os
-import urllib.request
+from urllib.request import urlretrieve
 
 import imageio
 
@@ -20,7 +20,7 @@ def load_by_path(path):
     if not os.path.exists('../data/'):
         os.makedirs('../data/')
     if not os.path.isfile(f'../data/{path}'):
-        urllib.request.urlretrieve(url, path)
+        urlretrieve(url, path)
 
     return imageio.imread(path)
 
