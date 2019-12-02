@@ -33,7 +33,7 @@ def get_full_dataset():
     return [
         dict(image=load_by_path('001_p.png'),
              title='1'),
-        dict(image=load_by_path('001_p.png'),
+        dict(image=load_by_path('002_p.png'),
              title='2'),
         dict(image=load_by_path('003_p.png'),
              title='3'),
