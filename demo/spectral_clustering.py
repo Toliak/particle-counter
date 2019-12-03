@@ -73,8 +73,7 @@ def evaluate(config, image_path=None):
     from core.AlgorithmList import SpectralClustering
 
     if image_path:
-        original_image = dict(image=imageio.imread(image_path),
-                              title=image_path)
+        original_image = imageio.imread(image_path)
     else:
         original_image = Dataset.load_by_path('test_cluster.png')
 
