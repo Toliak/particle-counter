@@ -52,3 +52,30 @@ def test_spectral_clustering_demo_image(demo_image):
     result = evaluate(TestConfig)
 
     assert result == 10
+
+
+class TestConfig2:
+    FIGSIZE = (15, 12)
+    ITERATIONS = 3
+    GRAPH_BETA = (18, 18, 16)
+    GRAPH_EPS = (1e-6, 1e-6, 1e-6)
+    N_CLUSTERS = (20, 10, 6)
+    N_INIT = (1, 1, 1)
+    LABELS = ('kmeans', 'kmeans', 'kmeans')
+    RESULT_OUTPUT_SIZE = ((10, 10), (15, 30), (15, 30))
+    FIRST_MAX_TRANSFORM_SIZE = 450
+    RANDOM_STATE = 50
+    BACKGROUND_MAX_GRAY = 0.2
+    BACKGROUND_PERCENT = 0.85
+    LABEL_PEAK_MIN_GRAY = 0.46
+    LABEL_PEAK_MIN_SIZE = 25
+
+
+def test_spectral_clustering_demo_image_large():
+    """Проверка доступности демонстрационного изображения
+    """
+    from demo.spectral_clustering import evaluate
+
+    result = evaluate(TestConfig2, '../data/011_p.png')
+
+    assert result == 104
