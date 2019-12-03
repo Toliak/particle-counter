@@ -78,4 +78,4 @@ def test_spectral_clustering_demo_image_large():
 
     result = evaluate(TestConfig2, '../data/011_p.png')
 
-    assert result == 104
+    assert 95 <= result <= 130
