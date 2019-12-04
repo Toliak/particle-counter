@@ -1,0 +1,15 @@
+os: linux
+sudo: required
+language: python
+python: 3.7
+
+install:
+  - pip install pip pipenv pytest pytest-cov
+  - pipenv install --deploy --system --skip-lock
+
+jobs:
+  include:
+    - name: "coverage"
+      script:
+        - cd tests
+        - pytest --cov=core .
