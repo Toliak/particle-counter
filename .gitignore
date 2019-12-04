@@ -4,3 +4,7 @@ local.py
 Pipfile.lock
 data
 .ipynb_checkpoints
+*build*
+artifacts
+.pytest_cache
+.coverage

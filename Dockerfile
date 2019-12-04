@@ -13,8 +13,10 @@ RUN set -ex && \
                    pipenv && \
     cd /tmp/ && \
     pipenv install --deploy --system --skip-lock && \
-    apt-get remove -y $PACKAGES
+    apt-get remove -y $PACKAGES && \
+    apt-get -y autoremove && \
+    apt-get -y clean && \
+    rm -rf /var/lib/apt
 
+VOLUME /opt/builder
 WORKDIR /opt/builder
-
-COPY . /opt/builder

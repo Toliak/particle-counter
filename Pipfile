@@ -6,12 +6,11 @@ verify_ssl = true
 [dev-packages]
 
 [packages]
-jupyter = "*"
+matplotlib = "*"
+numpy = "*"
+imageio = "*"
 sklearn = "*"
 scikit-image = "*"
-numpy = "*"
-matplotlib = "*"
-imageio = "*"
 pyamg = "*"
 
 [requires]
