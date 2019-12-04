@@ -1,3 +1,8 @@
+[![Build Status](https://travis-ci.com/Toliak/particle-counter.svg?branch=master)](https://travis-ci.com/Toliak/particle-counter)
+[![pipeline status](https://gitlab.toliak.ru/Toliak/particle-counter/badges/master/pipeline.svg)](https://gitlab.toliak.ru/Toliak/particle-counter/commits/master)
+![Code size](https://img.shields.io/github/languages/code-size/Toliak/particle-counter.svg)
+![GitHub Repo size](https://img.shields.io/github/repo-size/Toliak/particle-counter.svg)
+
 # Курсовой проект
 
 Подсчет частиц на изображениях электронных микроскопов
